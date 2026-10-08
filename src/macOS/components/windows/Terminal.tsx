@@ -1,6 +1,6 @@
-import WindowControls from '#components/WindowControls';
-import { techStack } from '#constants';
-import WindowWrapper from '#hoc/WindowWrapper';
+import WindowControls from '../WindowControls';
+import { techStack } from '../../constants';
+import WindowWrapper from '../../hoc/WindowWrapper';
 import { Check, Flag } from 'lucide-react';
 
 
@@ -40,7 +40,7 @@ const Terminal = () => {
                 <p>
                     <Check size={20}/> 5 of 5 stacks loaded successfully (100%)
                 </p>
-                <p className='text-black'>
+                <p className='text-[#cacaca]'>
                     <Flag size={15} fill='black'/>
                     Render time: 0.444ms
                 </p>
