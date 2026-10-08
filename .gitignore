@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code (local only)
+.claude/
+CLAUDE.md
+
+# Raw / draft 3D assets (kept locally, not versioned)
+/public/*.glb
+/portfolio-03.07-transformed.glb
+/portfolio30.07.26-transformed.glb
+/portfolio30.07.26v2-transformed.glb
+/portfolio30.07.26v3-transformed.glb
+
+# Draft files
+/26v*.jsx
+/src/App-04.07

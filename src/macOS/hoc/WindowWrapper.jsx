@@ -1,4 +1,4 @@
-import useWindowStore from '#store/window'
+import useWindowStore from '../store/window'
 import React, { useLayoutEffect, useRef } from 'react'
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
