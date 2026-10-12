@@ -1,13 +1,13 @@
 import dayjs from 'dayjs';
 
-import { navLinks, navIcons } from '../constants/index.ts';
+import { navLinks, navIcons, type WindowKey } from '../constants/index.ts';
 import useWindowStore from '../store/window';
 
 
 type NavItem = {
   id: number;
   name: string;
-  type: string;
+  type: WindowKey;
 }
 type Icon = {
   id: number; 

@@ -1,4 +1,4 @@
-const navLinks = [
+const navLinks: { id: number; name: string; type: WindowKey }[] = [
   {
     id: 1,
     name: "Projects",
@@ -35,7 +35,7 @@ const navIcons = [
   },
 ];
 
-const dockApps = [
+const dockApps: { id: WindowKey; name: string; icon: string; canOpen: boolean }[] = [
   {
     id: "finder",
     name: "Portfolio", // was "Finder"
@@ -488,6 +488,12 @@ export const locations = {
 
 const INITIAL_Z_INDEX = 1000;
 
+export interface WindowState {
+  isOpen: boolean;
+  zIndex: number;
+  data: unknown;
+}
+
 const WINDOW_CONFIG = {
   finder: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
   contact: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
@@ -497,6 +503,9 @@ const WINDOW_CONFIG = {
   terminal: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
   txtfile: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
   imgfile: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
-};
+  trash: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
+} satisfies Record<string, WindowState>;
+
+export type WindowKey = keyof typeof WINDOW_CONFIG;
 
 export { INITIAL_Z_INDEX, WINDOW_CONFIG };

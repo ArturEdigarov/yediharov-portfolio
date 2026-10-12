@@ -3,17 +3,18 @@ import { useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import useWindowStore from '../store/window.js';
+import useWindowStore from '../store/window';
+import type { WindowKey } from '../constants';
 const Dock = () => {
     const { openWindow, closeWindow, windows } = useWindowStore();
-        const dockRef = useRef(null);
+    const dockRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
         const dock = dockRef.current;
         if (!dock) return;
 
-        const icons = dock.querySelectorAll(".dock-icon");
-        const animateIcons = (mouseX) => {
+        const icons = dock.querySelectorAll<HTMLElement>(".dock-icon");
+        const animateIcons = (mouseX: number) => {
             const { left } = dock.getBoundingClientRect();
             icons.forEach((icon) => {
                 const { left: iconLeft, width } = icon.getBoundingClientRect();
@@ -29,7 +30,7 @@ const Dock = () => {
                 })
             })
         }
-        const handleMouseMove = (e) => {
+        const handleMouseMove = (e: MouseEvent) => {
             const { left } = dock.getBoundingClientRect();
             animateIcons(e.clientX - left);
         };
@@ -39,22 +40,20 @@ const Dock = () => {
         dock.addEventListener("mousemove", handleMouseMove);
         dock.addEventListener("mouseleave", resetIcons);
         return () => {
-            dock.addEventListener("mousemove", handleMouseMove);
-            dock.addEventListener("mouseleave", resetIcons);
+            dock.removeEventListener("mousemove", handleMouseMove);
+            dock.removeEventListener("mouseleave", resetIcons);
         };
         
     }, []);
 
-    const toggleApp = (app) => {
+    const toggleApp = (app: { id: WindowKey; canOpen: boolean }) => {
         if(!app.canOpen) return;
-        const window = windows[app.id];
-        if(window.isOpen) {
+        if(windows[app.id].isOpen) {
             closeWindow(app.id);
         }else{
             openWindow(app.id)
         }
-        console.log(windows);
-    } 
+    }
   return (
     <section id="dock">
         <div ref={dockRef} className='dock-container'>
