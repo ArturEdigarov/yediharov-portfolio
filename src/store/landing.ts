@@ -19,6 +19,49 @@ export const chapterFromOffset = (offset: number): ChapterIndex => {
   return 0;
 };
 
+// Small dead zone around each boundary, so a trackpad wobble
+// right on the edge does not flip chapters back and forth.
+const CHAPTER_HYSTERESIS = 0.015;
+
+export const nextChapter = (offset: number, current: ChapterIndex): ChapterIndex => {
+  const candidate = chapterFromOffset(offset);
+  if (candidate > current) {
+    return offset >= CHAPTERS[candidate].start + CHAPTER_HYSTERESIS ? candidate : current;
+  }
+  if (candidate < current) {
+    return offset < CHAPTERS[current].start - CHAPTER_HYSTERESIS ? candidate : current;
+  }
+  return current;
+};
+
+// How far the reader is through a chapter, 0..1.
+export const chapterProgress = (offset: number, index: number) => {
+  const start = CHAPTERS[index].start;
+  const end = index + 1 < CHAPTERS.length ? CHAPTERS[index + 1].start : 1;
+  return Math.min(1, Math.max(0, (offset - start) / (end - start)));
+};
+
+// Per-frame scroll offset lives outside React state on purpose:
+// subscribers update the DOM directly instead of re-rendering 60 times a second.
+type OffsetListener = (offset: number) => void;
+const offsetListeners = new Set<OffsetListener>();
+let latestOffset = 0;
+
+export const scrollOffset = {
+  publish(offset: number) {
+    if (Math.abs(offset - latestOffset) < 0.0001) return;
+    latestOffset = offset;
+    offsetListeners.forEach((listener) => listener(offset));
+  },
+  subscribe(listener: OffsetListener) {
+    offsetListeners.add(listener);
+    listener(latestOffset);
+    return () => {
+      offsetListeners.delete(listener);
+    };
+  },
+};
+
 interface LandingStore {
   chapter: ChapterIndex;
   scrollEl: HTMLElement | null;

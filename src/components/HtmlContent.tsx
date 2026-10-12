@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
 import { useEffect, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { projects, type Project } from '../data/projects'
@@ -9,21 +10,25 @@ import useLandingStore from '../store/landing'
 // and hands over to the next one with a short crossfade.
 const Chapter = ({ children, labelledBy }: { children: ReactNode; labelledBy: string }) => {
   const reduceMotion = useReducedMotion()
-  const motionProps = reduceMotion
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
-    : {
-        initial: { opacity: 0, y: 32 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: -32 },
-      }
+  const shift = reduceMotion ? 0 : 14
+  // A relay rather than a swap: the old chapter leaves quickly,
+  // the new one arrives a beat later and settles slowly.
+  const motionProps = {
+    initial: { opacity: 0, y: shift },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const },
+    },
+    exit: {
+      opacity: 0,
+      y: -shift,
+      transition: { duration: 0.35, ease: [0.4, 0, 1, 1] as const },
+    },
+  }
 
   return (
-    <motion.section
-      aria-labelledby={labelledBy}
-      {...motionProps}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-0"
-    >
+    <motion.section aria-labelledby={labelledBy} {...motionProps} className="absolute inset-0">
       <div className="absolute top-1/2 left-[56%] w-[min(36rem,38vw)] -translate-y-1/2 max-md:inset-x-4 max-md:w-auto max-md:rounded-2xl max-md:bg-stage/85 max-md:p-5">
         {children}
       </div>
@@ -168,6 +173,28 @@ const Experience = () => (
   </Chapter>
 )
 
+// A quiet hint that the page continues; it leaves once the reader reaches the next chapter.
+const ScrollHint = () => {
+  const reduceMotion = useReducedMotion()
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 0.8, delay: 1.4 } }}
+      exit={{ opacity: 0, transition: { duration: 0.3 } }}
+      className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 text-graphite max-md:bottom-20"
+    >
+      <span className="text-xs">Scroll</span>
+      <motion.span
+        aria-hidden
+        animate={reduceMotion ? undefined : { y: [0, 6, 0], opacity: [1, 0.45, 1] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <ChevronDown className="h-5 w-5 text-keylight" />
+      </motion.span>
+    </motion.div>
+  )
+}
+
 const CHAPTER_VIEWS = [Intro, Work, Experience]
 
 // Rendered through a portal into drei's sticky layer, so wheel and touch
@@ -183,6 +210,7 @@ export const HtmlContent = () => {
   return createPortal(
     <div className="landing absolute inset-0">
       <AnimatePresence initial={false}>{ChapterView && <ChapterView key={chapter} />}</AnimatePresence>
+      <AnimatePresence>{chapter === 0 && <ScrollHint />}</AnimatePresence>
     </div>,
     fixedEl,
   )
