@@ -6,18 +6,18 @@ import useLandingStore, { projectSlugFromHash } from '../store/landing'
 
 const ScreenshotSlot = ({ label, large = false }: { label: string; large?: boolean }) => (
   <figure
-    className={`flex items-center justify-center rounded-lg border border-dashed border-graphite/40 bg-floor/60 ${
+    className={`flex items-center justify-center rounded-lg border border-dashed border-ink-soft/40 bg-ink/5 ${
       large ? 'aspect-[16/10]' : 'aspect-[4/3]'
     }`}
   >
-    <figcaption className="px-4 text-center text-sm text-graphite">Screenshot: {label}</figcaption>
+    <figcaption className="px-4 text-center text-sm text-ink-soft">Screenshot: {label}</figcaption>
   </figure>
 )
 
 const SheetSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="mt-10">
-    <h3 className="text-lg font-semibold text-aluminium">{title}</h3>
-    <div className="mt-3 text-base leading-relaxed text-graphite">{children}</div>
+    <h3 className="text-lg font-semibold text-ink">{title}</h3>
+    <div className="mt-3 text-base leading-relaxed text-ink-soft">{children}</div>
   </section>
 )
 
@@ -29,26 +29,26 @@ const CaseStudy = ({ project }: { project: Project }) => {
 
   return (
     <article className="px-10 pt-6 pb-12 max-sm:px-5">
-      <p className="text-sm text-graphite">
+      <p className="text-sm text-ink-soft">
         {project.kind === 'Commercial' ? `Client work for ${project.client}` : 'Personal project'}
       </p>
-      <h2 id="case-study-title" className="mt-2 text-[3rem] leading-none font-extrabold tracking-[-0.03em] text-aluminium max-sm:text-[2.25rem]">
+      <h2 id="case-study-title" className="mt-2 text-[3rem] leading-none font-extrabold tracking-[-0.03em] text-ink max-sm:text-[2.25rem]">
         {project.name}
       </h2>
-      <p className="mt-4 max-w-[40ch] text-[1.3125rem] leading-snug text-aluminium">{project.summary}</p>
+      <p className="mt-4 max-w-[40ch] text-[1.3125rem] leading-snug text-ink">{project.summary}</p>
 
       <dl className="mt-8 grid grid-cols-[1fr_0.5fr_1.6fr] gap-6 border-y border-line py-5 text-sm max-sm:grid-cols-1 max-sm:gap-3">
         <div>
-          <dt className="text-graphite">Role</dt>
-          <dd className="mt-1 text-aluminium">{project.role}</dd>
+          <dt className="text-ink-soft">Role</dt>
+          <dd className="mt-1 text-ink">{project.role}</dd>
         </div>
         <div>
-          <dt className="text-graphite">Year</dt>
-          <dd className="mt-1 text-aluminium tabular-nums">{project.year}</dd>
+          <dt className="text-ink-soft">Year</dt>
+          <dd className="mt-1 text-ink tabular-nums">{project.year}</dd>
         </div>
         <div>
-          <dt className="text-graphite">Stack</dt>
-          <dd className="mt-1 text-aluminium">{project.stack.join(', ')}</dd>
+          <dt className="text-ink-soft">Stack</dt>
+          <dd className="mt-1 text-ink">{project.stack.join(', ')}</dd>
         </div>
       </dl>
 
@@ -69,7 +69,7 @@ const CaseStudy = ({ project }: { project: Project }) => {
         <ul className="max-w-[60ch] space-y-2">
           {project.contribution.map((item) => (
             <li key={item} className="grid grid-cols-[1rem_1fr]">
-              <span aria-hidden className="mt-[0.7em] block h-1 w-1 rounded-full bg-keylight" />
+              <span aria-hidden className="mt-[0.7em] block h-1 w-1 rounded-full bg-action" />
               <span>{item}</span>
             </li>
           ))}
@@ -82,10 +82,10 @@ const CaseStudy = ({ project }: { project: Project }) => {
           {project.metrics.map((metric) => (
             <div key={metric.label}>
               <dt className="sr-only">{metric.label}</dt>
-              <dd className="text-[2.25rem] leading-none font-bold tracking-tight text-aluminium tabular-nums">
+              <dd className="text-[2.25rem] leading-none font-bold tracking-tight text-ink tabular-nums">
                 {metric.value}
               </dd>
-              <dd className="mt-2 text-sm text-graphite">{metric.label}</dd>
+              <dd className="mt-2 text-sm text-ink-soft">{metric.label}</dd>
             </div>
           ))}
         </dl>
@@ -99,13 +99,13 @@ const CaseStudy = ({ project }: { project: Project }) => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-keylight px-5 py-2.5 text-[0.9375rem] font-semibold text-stage transition-colors hover:bg-keylight-strong"
+              className="rounded-full bg-action px-5 py-2.5 text-[0.9375rem] font-semibold text-action-ink transition-colors hover:bg-action-hover"
             >
               {link.label}
             </a>
           ))
         ) : (
-          <p className="text-sm text-graphite">
+          <p className="text-sm text-ink-soft">
             The code and screens are under NDA. I'm happy to walk you through them on a call.
           </p>
         )}
@@ -113,12 +113,12 @@ const CaseStudy = ({ project }: { project: Project }) => {
 
       <nav aria-label="Other projects" className="mt-14 grid grid-cols-2 gap-6 border-t border-line pt-6 text-sm">
         <button type="button" onClick={() => openProject(previous.slug)} className="cursor-pointer text-left">
-          <span className="block text-graphite">Previous project</span>
-          <span className="mt-1 block font-semibold text-aluminium hover:text-keylight">{previous.name}</span>
+          <span className="block text-ink-soft">Previous project</span>
+          <span className="mt-1 block font-semibold text-ink hover:text-ink">{previous.name}</span>
         </button>
         <button type="button" onClick={() => openProject(next.slug)} className="cursor-pointer text-right">
-          <span className="block text-graphite">Next project</span>
-          <span className="mt-1 block font-semibold text-aluminium hover:text-keylight">{next.name}</span>
+          <span className="block text-ink-soft">Next project</span>
+          <span className="mt-1 block font-semibold text-ink hover:text-ink">{next.name}</span>
         </button>
       </nav>
     </article>
@@ -202,14 +202,14 @@ const ProjectSheet = () => {
             aria-labelledby="case-study-title"
             {...slide}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-y-0 right-0 w-[min(44rem,100%)] overflow-y-auto overscroll-contain border-l border-line bg-stage-raised"
+            className="absolute inset-y-0 right-0 w-[min(44rem,100%)] overflow-y-auto overscroll-contain border-l border-line bg-sheet"
           >
-            <div className="sticky top-0 z-10 flex justify-end bg-stage-raised px-6 py-4">
+            <div className="sticky top-0 z-10 flex justify-end bg-sheet px-6 py-4">
               <button
                 ref={closeButtonRef}
                 type="button"
                 onClick={closeProject}
-                className="flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm text-graphite ring-1 ring-line transition-colors ring-inset hover:text-aluminium"
+                className="flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm text-ink-soft ring-1 ring-line transition-colors ring-inset hover:text-ink"
               >
                 <X className="h-4 w-4" aria-hidden />
                 Close

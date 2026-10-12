@@ -45,8 +45,7 @@ const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
             castShadow
             position={[5, 5, 5]}
             intensity={2}
-            color="#fff1dc"
-            shadow-mapSize={[2048, 2048]}
+                        shadow-mapSize={[2048, 2048]}
             shadow-bias={-0.0002}
             shadow-camera-far={20}
           />
