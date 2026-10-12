@@ -1,215 +1,157 @@
 import { Scroll } from '@react-three/drei'
-import { motion } from 'framer-motion'
-import {type ReactNode} from 'react';
-// Анимированный контейнер секции
-interface ContentSectionProps {
-  children: ReactNode; 
-}
+import { motion, useReducedMotion } from 'framer-motion'
+import type { ReactNode } from 'react'
+import { projects, type Project } from '../data/projects'
+import { experience, profile, stack } from '../data/profile'
+import useLandingStore from '../store/landing'
 
-const ContentSection = ({ children }: ContentSectionProps) => {
-  return (
-    <div 
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '75%',
-        transform: 'translate(-50%, -50%)',
-      }}
-      className="w-full max-w-xl px-6 text-left"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
-        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        viewport={{ once: false, amount: 0.8 }} // Анимация срабатывает, когда блок на 50% в зоне видимости
-        transition={{ duration: 0.8 }} // Плавный и мягкий кубический Безье
-      >
-        {children}
-      </motion.div>
+// One screen-tall chapter; the text column sits to the right of the character.
+const Chapter = ({ children, labelledBy }: { children: ReactNode; labelledBy: string }) => (
+  <section aria-labelledby={labelledBy} className="relative h-screen">
+    <div className="absolute top-1/2 left-[56%] w-[min(36rem,38vw)] -translate-y-1/2 max-md:inset-x-4 max-md:w-auto max-md:rounded-2xl max-md:bg-stage/85 max-md:p-5">
+      {children}
     </div>
+  </section>
+)
+
+const Intro = () => {
+  const reduceMotion = useReducedMotion()
+  // The single orchestrated moment on the page: name, promise, actions.
+  const reveal = (delay: number) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 16 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
+        }
+
+  return (
+    <Chapter labelledBy="intro-title">
+      <motion.h1
+        id="intro-title"
+        {...reveal(0.2)}
+        className="text-[clamp(3rem,6vw,4.5rem)] leading-[0.95] font-extrabold tracking-[-0.035em] text-aluminium"
+      >
+        Artur
+        <br />
+        Yediharov
+      </motion.h1>
+
+      <motion.p {...reveal(0.35)} className="mt-6 max-w-[30ch] text-[1.5rem] leading-snug font-medium text-aluminium">
+        I build web products end to end, from the interface down to the machines it controls.
+      </motion.p>
+
+      <motion.p {...reveal(0.45)} className="mt-4 max-w-[46ch] text-base leading-relaxed text-graphite">
+        Fullstack developer in Hannover with over a year of commercial experience.
+        Open to working student roles at 20 hours a week and to remote contracts.
+      </motion.p>
+
+      <motion.div {...reveal(0.6)} className="mt-8 flex flex-wrap items-center gap-3">
+        <a
+          href={profile.cvUrl}
+          download={profile.cvFileName}
+          className="rounded-full bg-keylight px-5 py-2.5 text-[0.9375rem] font-semibold text-stage transition-colors hover:bg-keylight-strong"
+        >
+          Download CV
+        </a>
+        <a
+          href={`mailto:${profile.email}`}
+          className="rounded-full px-5 py-2.5 text-[0.9375rem] font-semibold text-aluminium ring-1 ring-line transition-colors ring-inset hover:ring-graphite"
+        >
+          Email me
+        </a>
+      </motion.div>
+    </Chapter>
   )
 }
 
+const ProjectRow = ({ project }: { project: Project }) => {
+  const openProject = useLandingStore((s) => s.openProject)
+
+  return (
+    <li className="border-t border-line last:border-b">
+      <button
+        type="button"
+        onClick={() => openProject(project.slug)}
+        aria-haspopup="dialog"
+        className="group grid w-full cursor-pointer grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1.5 py-5 text-left"
+      >
+        <span className="text-[1.75rem] leading-tight font-bold tracking-[-0.02em] text-aluminium transition-colors group-hover:text-keylight">
+          {project.name}
+        </span>
+        <span className="text-sm text-graphite tabular-nums">{project.year}</span>
+
+        <span className="col-span-2 max-w-[48ch] text-base leading-relaxed text-graphite">
+          {project.summary}
+        </span>
+
+        <span className="col-span-2 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+          <span className="text-aluminium">
+            {project.kind === 'Commercial' ? `Client work, ${project.client}` : 'Personal project'}
+          </span>
+          <span className="text-graphite">{project.stack.slice(0, 3).join(', ')}</span>
+          <span className="ml-auto font-semibold text-keylight opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 max-md:opacity-100">
+            Read case study
+          </span>
+        </span>
+      </button>
+    </li>
+  )
+}
+
+const Work = () => (
+  <Chapter labelledBy="work-title">
+    <h2 id="work-title" className="text-[2.25rem] leading-tight font-bold tracking-tight text-aluminium">
+      Selected work
+    </h2>
+    <p className="mt-2 text-base text-graphite">Two products for clients and one I built to learn.</p>
+    <ul className="mt-8">
+      {projects.map((project) => (
+        <ProjectRow key={project.slug} project={project} />
+      ))}
+    </ul>
+  </Chapter>
+)
+
+const Experience = () => (
+  <Chapter labelledBy="experience-title">
+    <h2 id="experience-title" className="text-[2.25rem] leading-tight font-bold tracking-tight text-aluminium">
+      Experience
+    </h2>
+
+    <ol className="mt-8 space-y-6">
+      {experience.map((entry) => (
+        <li key={entry.place} className="grid grid-cols-[7.5rem_1fr] gap-x-6 max-sm:grid-cols-1">
+          <span className="pt-0.5 text-sm text-graphite tabular-nums">{entry.period}</span>
+          <div>
+            <p className="text-lg leading-snug font-semibold text-aluminium">{entry.title}</p>
+            <p className="text-base text-aluminium/80">{entry.place}</p>
+            <p className="mt-1 text-sm leading-relaxed text-graphite">{entry.detail}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <dl className="mt-10 grid grid-cols-[7.5rem_1fr] gap-x-6 gap-y-2 border-t border-line pt-6 text-sm max-sm:grid-cols-1">
+      {stack.map(({ area, tools }) => (
+        <div key={area} className="contents">
+          <dt className="text-graphite">{area}</dt>
+          <dd className="text-aluminium">{tools.join(', ')}</dd>
+        </div>
+      ))}
+    </dl>
+  </Chapter>
+)
+
 export const HtmlContent = () => {
   return (
-    <>
     <Scroll html style={{ width: '100%', height: '100%' }}>
-      <div style={{ width: '100vw', height: '300vh', position: 'relative' }}>
-        
-        {/* Секция 1 */}
-        <div style={{ height: '100vh', position: 'relative' }}>
-          <ContentSection>
-            <div className="space-y-4">
-              <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-cyan-400 uppercase bg-cyan-950/50 border border-cyan-800/50 rounded-full">
-                PORTFOLIO 2026 • DUALES STUDIUM APPLICANT
-              </span>
-              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white">
-                Artur <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-indigo-500">Yediharov</span>
-              </h1>
-              <p className="text-lg text-zinc-400 font-light">
-                Software Developer & Engineer with <strong className="font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-indigo-300">1+ year of commercial experience</strong>, building high-performance web applications, backend architectures, and automated IoT systems.
-              </p>
-            </div>
-          </ContentSection>
-        </div>
-
-        {/* Секция 2 */}
-        <div style={{ height: '100vh', position: 'relative' }}>
-  <ContentSection>
-    <div className="space-y-6 max-w-2xl">
-      <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-purple-400 uppercase bg-purple-950/50 border border-purple-800/50 rounded-full">
-        EXPERTISE & BACKGROUND
-      </span>
-      
-      <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
-        Software-<span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-500">Entwicklung</span>
-      </h2>
-
-      {/* Структурированный и красивый блок описания */}
-      <div className="space-y-4 text-zinc-300 font-light text-base md:text-lg">
-        
-        {/* Коммерческий опыт */}
-        <div className="flex items-start space-x-3 bg-zinc-900/40 border border-zinc-800/60 p-4 rounded-xl backdrop-blur-sm">
-          <div className="w-2 h-2 mt-2 rounded-full bg-purple-400 shrink-0 shadow-[0_0_10px_#c084fc]" />
-          <div>
-            <strong className="text-white font-semibold block mb-0.5">Commercial Experience</strong>
-            <span className="text-zinc-400 text-sm md:text-base">
-              1+ year as Software Developer at <span className="text-white font-medium">SOL Webservice & Consulting</span> (React, TypeScript, PHP, Laravel, Go).
-            </span>
-          </div>
-        </div>
-
-        {/* Стек технологий */}
-        <div className="flex items-start space-x-3 bg-zinc-900/40 border border-zinc-800/60 p-4 rounded-xl backdrop-blur-sm">
-          <div className="w-2 h-2 mt-2 rounded-full bg-pink-500 shrink-0 shadow-[0_0_10px_#ec4899]" />
-          <div>
-            <strong className="text-white font-semibold block mb-0.5">Core Stack & Systems</strong>
-            <span className="text-zinc-400 text-sm md:text-base">
-              Frontend (React, TS, Tailwind) & Backend (PHP, Laravel, Go, Appwrite), plus IoT & Admin architectures.
-            </span>
-          </div>
-        </div>
-
-        {/* Образование */}
-        <div className="flex items-start space-x-3 bg-zinc-900/40 border border-zinc-800/60 p-4 rounded-xl backdrop-blur-sm">
-          <div className="w-2 h-2 mt-2 rounded-full bg-cyan-400 shrink-0 shadow-[0_0_10px_#22d3ee]" />
-          <div>
-            <strong className="text-white font-semibold block mb-0.5">Education & Academic Background</strong>
-            <span className="text-zinc-400 text-sm md:text-base block">
-              • Schiller-Gymnasium Hameln (Bilingual / Math focus)
-            </span>
-            <span className="text-zinc-400 text-sm md:text-base block mt-2">
-              • Lyceum 150 (Abitur-equivalent, Grade: <span className="text-cyan-400 font-medium">1,66</span>)
-            </span>
-            <span className="text-zinc-400 text-sm md:text-base block mt-2">
-              • IT STEP Computer Academy (Frontend Engineering).
-            </span>
-          </div>
-        </div>
-        {/* <div className="flex items-start space-x-3 bg-zinc-900/40 border border-zinc-800/60 p-4 rounded-xl backdrop-blur-sm">
-          <div className="w-2 h-2 mt-2 rounded-full bg-cyan-400 shrink-0 shadow-[0_0_10px_#22d3ee]" />
-          <div>
-            <strong className="text-white font-semibold block mb-0.5">Education</strong>
-            <span className="text-zinc-400 text-sm md:text-base">
-              Schiller-Gymnasium Hameln (Bilingual / Math focus) + IT STEP Academy.
-            </span>
-          </div>
-        </div> */}
-
-      </div>
-    </div>
-  </ContentSection>
-</div>
-
-        {/* <div style={{ height: '100vh', position: 'relative' }}>
-          <ContentSection>
-            <div className="space-y-4">
-              <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-purple-400 uppercase bg-purple-950/50 border border-purple-800/50 rounded-full">
-                EXPERTISE & BACKGROUND
-              </span>
-              <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
-                Software-<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Entwicklung</span>
-              </h2>
-              <p className="text-lg text-zinc-400 font-light">
-                Commercial Experience: 1 year as Software Developer at SOL Webservice & Consulting (React, TypeScript, PHP, Laravel, Go). 
-
-                Education: Schiller-Gymnasium Hameln (Bilingual / Math focus) + IT STEP Academy.
-
-                Core Stack: Frontend (React, TS, Tailwind) & Backend (PHP, Laravel, Go, Appwrite).
-              </p>
-            </div>
-          </ContentSection>
-        </div> */}
-
-        {/* Секция 3 */}
-        <div style={{ height: '100vh', position: 'relative' }}>
-          <ContentSection>
-            <div className="space-y-6 max-w-2xl">
-              <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-800/50 rounded-full">
-                FEATURED PROJECTS
-              </span>
-              
-              <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
-                Commercial <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-cyan-500">& Shipped Products</span>
-              </h2>
-
-              {/* Структурированный список ключевых проектов */}
-              <div className="space-y-4 text-zinc-300 font-light text-base md:text-lg">
-                
-                {/* Проект 1: Real Estate */}
-                <div className="flex items-start space-x-3 bg-zinc-900/40 border border-zinc-800/60 p-4 rounded-xl backdrop-blur-sm">
-                  <div className="w-2 h-2 mt-2 rounded-full bg-emerald-400 shrink-0 shadow-[0_0_10px_#34d399]" />
-                  <div>
-                    <strong className="text-white font-semibold block mb-0.5">Real Estate Admin Panel</strong>
-                    <span className="text-zinc-400 text-sm md:text-base">
-                      Large-scale commercial admin panel for a real estate rental management service (SOL Webservice & Consulting)..
-                    </span>
-                  </div>
-                </div>
-
-                {/* Проект 2: Industrial IoT */}
-                <div className="flex items-start space-x-3 bg-zinc-900/40 border border-zinc-800/60 p-4 rounded-xl backdrop-blur-sm">
-                  <div className="w-2 h-2 mt-2 rounded-full bg-cyan-400 shrink-0 shadow-[0_0_10px_#22d3ee]" />
-                  <div>
-                    <strong className="text-white font-semibold block mb-0.5">Industrial Cocktail IoT System</strong>
-                    <span className="text-zinc-400 text-sm md:text-base">
-                      Industrial software for automated systems with a custom admin panel, web ordering, and barcode-based drink dispensing.
-                    </span>
-                  </div>
-                </div>
-
-                {/* Проект 3: Social Platform */}
-                <div className="flex items-start space-x-3 bg-zinc-900/40 border border-zinc-800/60 p-4 rounded-xl backdrop-blur-sm">
-                  <div className="w-2 h-2 mt-2 rounded-full bg-indigo-500 shrink-0 shadow-[0_0_10px_#6366f1]" />
-                  <div>
-                    <strong className="text-white font-semibold block mb-0.5">Garov-Custom Social Platform</strong>
-                    <span className="text-zinc-400 text-sm md:text-base">
-                      Full-stack social media platform (React, TypeScript, Appwrite, PWA) featuring authentication, CRUD, and infinite scroll.
-                    </span>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </ContentSection>
-        </div>
-        {/* <div style={{ height: '100vh', position: 'relative' }}>
-          <ContentSection>
-            <div className="space-y-4">
-              <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-emerald-400 uppercase bg-emerald-950/50 border border-emerald-800/50 rounded-full">
-                Next Step
-              </span>
-              <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
-                Дальнейший <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">функционал...</span>
-              </h2>
-              <p className="text-lg text-zinc-400 font-light">
-                Интерактивные проекты, код и погружение в рабочую среду макбука.
-              </p>
-            </div>
-          </ContentSection>
-        </div> */}
-
+      <div className="landing relative h-[300vh] w-screen">
+        <Intro />
+        <Work />
+        <Experience />
       </div>
     </Scroll>
-    </>
   )
 }

@@ -6,21 +6,29 @@ import { HtmlContent } from './components/HtmlContent.tsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import MacDesktop from './macOS/MacDesktop.tsx'
+import useLandingStore from './store/landing.ts'
 
 import './macOS/MacOs.css'
 import './macOS/MacOs2.css'
-import NavLink from './components/NavLink.tsx'
-import ScrollIndicator from './components/ScrollIndicator.tsx'
+import SiteHeader from './components/SiteHeader.tsx'
+import ChapterRail from './components/ChapterRail.tsx'
+import ProjectSheet from './components/ProjectSheet.tsx'
 
 function App() {
 const [isDesktopOpen, setIsDesktopOpen] = useState(false)
+const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
 
   return (
     <>
-    <div style={{ width: '100vw', height: '100vh', background: '#0b0b0b', position:"relative", overflow: 'hidden'}}>
+    <div className="landing-stage" style={{ width: '100vw', height: '100vh', position:"relative", overflow: 'hidden'}}>
       
       {/* Canvas теперь на весь экран, но скролл будет управлять контентом */}
-      <Canvas shadows camera={{ position: [-0.4, 0.3, 1.7], fov: 38 }}>
+      {/* Pause rendering while an overlay fully covers the scene. */}
+      <Canvas
+        shadows
+        camera={{ position: [-0.4, 0.3, 1.7], fov: 38 }}
+        frameloop={isDesktopOpen || isProjectOpen ? 'never' : 'always'}
+      >
         
         <ScrollControls pages={4} damping={0.2}>
           
@@ -37,6 +45,7 @@ const [isDesktopOpen, setIsDesktopOpen] = useState(false)
             castShadow
             position={[5, 5, 5]}
             intensity={2}
+            color="#fff1dc"
             shadow-mapSize={[2048, 2048]}
             shadow-bias={-0.0002}
             shadow-camera-far={20}
@@ -48,8 +57,9 @@ const [isDesktopOpen, setIsDesktopOpen] = useState(false)
         </ScrollControls>
       </Canvas>
 
-      <NavLink />
-      <ScrollIndicator />
+      <SiteHeader />
+      <ChapterRail />
+      <ProjectSheet />
 
       <AnimatePresence>
         {isDesktopOpen && (

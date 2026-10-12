@@ -1,5 +1,48 @@
 @import "tailwindcss";
 
+/*
+  Landing design tokens: a product shoot, not a void.
+  Stage and floor are the studio, aluminium is the laptop shell,
+  key light is the only accent and marks every action.
+*/
+@theme {
+  --color-stage: #161b26;
+  --color-stage-raised: #1c2230;
+  --color-floor: #232b3a;
+  --color-aluminium: #e6e8ec;
+  --color-graphite: #9aa3b2;
+  --color-keylight: #f2b544;
+  --color-keylight-strong: #ffc85c;
+  --color-line: rgb(154 163 178 / 0.18);
+
+  --font-display: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
 body {
   margin: 0px !important;
+}
+
+.landing {
+  font-family: var(--font-display);
+  color: var(--color-aluminium);
+  -webkit-font-smoothing: antialiased;
+}
+
+.landing ::selection {
+  background: var(--color-keylight);
+  color: var(--color-stage);
+}
+
+.landing :focus-visible {
+  outline: 2px solid var(--color-keylight);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Studio floor: a pool of light under the character instead of a flat black void. */
+.landing-stage {
+  background:
+    radial-gradient(ellipse 55% 40% at 28% 105%, rgb(242 181 68 / 0.07), transparent 70%),
+    radial-gradient(ellipse 70% 55% at 30% 100%, var(--color-floor), transparent 75%),
+    var(--color-stage);
 }

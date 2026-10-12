@@ -1,7 +1,8 @@
 import { useScroll } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import useLandingStore, { type ChapterIndex } from '../store/landing';
 
 interface SceneControllerProps {
   children: React.ReactNode;
@@ -13,9 +14,18 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
   const group = useRef<THREE.Group>(null);
   const isOpenRef = useRef(false);
 
+  useEffect(() => {
+    useLandingStore.getState().setScrollEl(scroll.el);
+  }, [scroll.el]);
+
   useFrame((state) => {
     if (!group.current) return;
     const rawScroll = scroll.offset; // от 0 до 1
+
+    // Report the chapter only when it changes, so React re-renders stay rare.
+    const chapter = Math.min(3, Math.round(rawScroll * 3)) as ChapterIndex;
+    const landing = useLandingStore.getState();
+    if (landing.chapter !== chapter) landing.setChapter(chapter);
     const mappedScroll = THREE.MathUtils.clamp((rawScroll - 0.25) / (1 - 0.25), 0, 1);
     // 1. Движение модели по оси X (твоя текущая логика)
     const clampedScrollForX = THREE.MathUtils.clamp(mappedScroll, 0, 0.65);
