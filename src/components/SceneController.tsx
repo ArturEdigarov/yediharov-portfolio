@@ -32,7 +32,7 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
     // 1. Движение модели по оси X (твоя текущая логика)
     const clampedScrollForX = THREE.MathUtils.clamp(mappedScroll, 0, 0.65);
     let targetX = 0;
-    if (mappedScroll >= 1 && !isOpenRef.current) {
+    if (mappedScroll >= 0.999 && !isOpenRef.current) {
       isOpenRef.current = true;
       onOpenDesktop(true); // Открываем
     } else if (mappedScroll < 1 && isOpenRef.current) {
