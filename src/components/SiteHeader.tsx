@@ -30,7 +30,7 @@ const SiteHeader = () => {
                 type="button"
                 onClick={() => goToChapter(index)}
                 aria-current={chapter === index ? 'true' : undefined}
-                className="cursor-pointer rounded-full px-3 py-1.5 text-ink-soft transition-colors hover:text-ink aria-[current]:text-ink"
+                className="cursor-pointer rounded-full px-3 py-1.5 text-ink-soft transition-colors hover:text-ink aria-[current]:text-accent-text"
               >
                 {CHAPTERS[index].label}
               </button>
@@ -66,7 +66,7 @@ const SiteHeader = () => {
           <a
             href={profile.cvUrl}
             download={profile.cvFileName}
-            className="ml-2 rounded-full bg-action px-4 py-1.5 font-semibold whitespace-nowrap text-action-ink transition-colors hover:bg-action-hover"
+            className="ml-2 rounded-full bg-accent px-4 py-1.5 font-semibold whitespace-nowrap text-accent-ink transition-colors hover:bg-accent-hover"
           >
             Download CV
           </a>

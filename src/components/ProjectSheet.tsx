@@ -69,7 +69,7 @@ const CaseStudy = ({ project }: { project: Project }) => {
         <ul className="max-w-[60ch] space-y-2">
           {project.contribution.map((item) => (
             <li key={item} className="grid grid-cols-[1rem_1fr]">
-              <span aria-hidden className="mt-[0.7em] block h-1 w-1 rounded-full bg-action" />
+              <span aria-hidden className="mt-[0.7em] block h-1.5 w-1.5 rounded-full bg-accent-text" />
               <span>{item}</span>
             </li>
           ))}
@@ -99,7 +99,7 @@ const CaseStudy = ({ project }: { project: Project }) => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-action px-5 py-2.5 text-[0.9375rem] font-semibold text-action-ink transition-colors hover:bg-action-hover"
+              className="rounded-full bg-accent px-5 py-2.5 text-[0.9375rem] font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
             >
               {link.label}
             </a>
@@ -114,11 +114,11 @@ const CaseStudy = ({ project }: { project: Project }) => {
       <nav aria-label="Other projects" className="mt-14 grid grid-cols-2 gap-6 border-t border-line pt-6 text-sm">
         <button type="button" onClick={() => openProject(previous.slug)} className="cursor-pointer text-left">
           <span className="block text-ink-soft">Previous project</span>
-          <span className="mt-1 block font-semibold text-ink hover:text-ink">{previous.name}</span>
+          <span className="mt-1 block font-semibold text-ink hover:text-accent-text">{previous.name}</span>
         </button>
         <button type="button" onClick={() => openProject(next.slug)} className="cursor-pointer text-right">
           <span className="block text-ink-soft">Next project</span>
-          <span className="mt-1 block font-semibold text-ink hover:text-ink">{next.name}</span>
+          <span className="mt-1 block font-semibold text-ink hover:text-accent-text">{next.name}</span>
         </button>
       </nav>
     </article>
