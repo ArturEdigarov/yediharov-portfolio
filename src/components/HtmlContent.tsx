@@ -1,8 +1,12 @@
 import { Scroll } from '@react-three/drei'
 import { motion } from 'framer-motion'
-
+import {type ReactNode} from 'react';
 // Анимированный контейнер секции
-const ContentSection = ({ children }) => {
+interface ContentSectionProps {
+  children: ReactNode; 
+}
+
+const ContentSection = ({ children }: ContentSectionProps) => {
   return (
     <div 
       style={{
@@ -39,10 +43,10 @@ export const HtmlContent = () => {
                 PORTFOLIO 2026 • DUALES STUDIUM APPLICANT
               </span>
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white">
-                Artur <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-500">Yediharov</span>
+                Artur <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-indigo-500">Yediharov</span>
               </h1>
               <p className="text-lg text-zinc-400 font-light">
-                Software Developer & Engineer with <strong className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-300">1+ year of commercial experience</strong>, building high-performance web applications, backend architectures, and automated IoT systems.
+                Software Developer & Engineer with <strong className="font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-indigo-300">1+ year of commercial experience</strong>, building high-performance web applications, backend architectures, and automated IoT systems.
               </p>
             </div>
           </ContentSection>
@@ -57,7 +61,7 @@ export const HtmlContent = () => {
       </span>
       
       <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
-        Software-<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Entwicklung</span>
+        Software-<span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-500">Entwicklung</span>
       </h2>
 
       {/* Структурированный и красивый блок описания */}
@@ -145,7 +149,7 @@ export const HtmlContent = () => {
               </span>
               
               <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
-                Commercial <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">& Shipped Products</span>
+                Commercial <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-cyan-500">& Shipped Products</span>
               </h2>
 
               {/* Структурированный список ключевых проектов */}

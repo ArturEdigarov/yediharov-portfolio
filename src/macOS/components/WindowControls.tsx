@@ -1,6 +1,7 @@
-import React from 'react'
-import useWindowStore from '../store/window.js';
-const WindowControls = ({ target }) => {
+import useWindowStore from '../store/window';
+import type { WindowKey } from '../constants';
+
+const WindowControls = ({ target }: { target: WindowKey }) => {
     const { closeWindow } = useWindowStore();
     return (
     <div id="window-controls">
