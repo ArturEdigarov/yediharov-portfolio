@@ -35,7 +35,7 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
     if (mappedScroll >= 0.999 && !isOpenRef.current) {
       isOpenRef.current = true;
       onOpenDesktop(true); // Открываем
-    } else if (mappedScroll < 1 && isOpenRef.current) {
+    } else if (mappedScroll < 0.999 && isOpenRef.current) {
       isOpenRef.current = false;
       onOpenDesktop(false); // Закрываем при скролле назад
     }
