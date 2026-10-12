@@ -68,7 +68,7 @@ const NavLink = () => {
 
           {/* Кнопка скачивания резюме (выделена акцентом) */}
           <a 
-            href="/resume.pdf" 
+            href="/files/resume.pdf" 
             download="Artur_Yediharov_Lebenslauf.pdf"
             className="text-xs md:text-sm font-medium px-4 py-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-zinc-800/50 flex items-center space-x-2 hover:shadow-[0_0_20px_rgba(6,182,212,0.5)] transition-all"
           >

@@ -7,7 +7,6 @@ gsap.registerPlugin(Draggable);
 const MacDesktop = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      console.log("Wheel event detected:", e.deltaY);
       // Если пользователь крутит колесико вверх (ему нужен обратный скролл сайта)
       if (e.deltaY < 0) {
         

@@ -1,3 +1,7 @@
+import { projects } from "../../data/projects";
+
+const PLACEHOLDER_IMAGE = "/images/placeholder.svg";
+
 const navLinks: { id: number; name: string; type: WindowKey }[] = [
   {
     id: 1,
@@ -74,28 +78,28 @@ const dockApps: { id: WindowKey; name: string; icon: string; canOpen: boolean }[
   },
 ];
 
+// TODO: replace with real posts or project updates.
 const blogPosts = [
   {
     id: 1,
-    date: "Sep 2, 2025",
-    title:
-      "TypeScript Explained: What It Is, Why It Matters, and How to Master It",
-    image: "/images/blog1.png",
-    link: "https://jsmastery.com/blog/typescript-explained-what-it-is-why-it-matters-and-how-to-master-it",
+    date: "Jul 7, 2026",
+    title: "SOLMIX: ordering interface for an automated cocktail bar",
+    image: PLACEHOLDER_IMAGE,
+    link: "https://solmix-bar.vercel.app",
   },
   {
     id: 2,
-    date: "Aug 28, 2025",
-    title: "The Ultimate Guide to Mastering Three.js for 3D Development",
-    image: "/images/blog2.png",
-    link: "https://jsmastery.com/blog/the-ultimate-guide-to-mastering-three-js-for-3d-development",
+    date: "Mar 27, 2026",
+    title: "Garov Social: a React and Appwrite social network",
+    image: PLACEHOLDER_IMAGE,
+    link: "https://github.com/ArturEdigarov/Garov-Social-App",
   },
   {
     id: 3,
-    date: "Aug 15, 2025",
-    title: "The Ultimate Guide to Mastering GSAP Animations",
-    image: "/images/blog3.png",
-    link: "https://jsmastery.com/blog/the-ultimate-guide-to-mastering-gsap-animations",
+    date: "Sep 9, 2025",
+    title: "Money Flow: a personal finance tracker in PHP",
+    image: PLACEHOLDER_IMAGE,
+    link: "https://github.com/ArturEdigarov/money-flow",
   },
 ];
 
@@ -125,31 +129,24 @@ const techStack = [
 const socials = [
   {
     id: 1,
-    text: "Github",
+    text: "GitHub",
     icon: "/icons/github.svg",
     bg: "#f4656b",
-    link: "https://github.com/JavaScript-Mastery-Pro",
+    link: "https://github.com/ArturEdigarov",
   },
   {
     id: 2,
-    text: "Platform",
-    icon: "/icons/atom.svg",
-    bg: "#4bcb63",
-    link: "https://jsmastery.com/",
-  },
-  {
-    id: 3,
-    text: "Twitter/X",
-    icon: "/icons/twitter.svg",
-    bg: "#ff866b",
-    link: "https://x.com/jsmasterypro",
-  },
-  {
-    id: 4,
     text: "LinkedIn",
     icon: "/icons/linkedin.svg",
     bg: "#05b6f6",
-    link: "https://www.linkedin.com/company/javascriptmastery/posts/?feedView=all",
+    link: "https://www.linkedin.com/in/artur-yediharov-0b2524372/",
+  },
+  {
+    id: 3,
+    text: "Email",
+    icon: "/icons/share.svg",
+    bg: "#4bcb63",
+    link: "mailto:arturedigarov07@gmail.com",
   },
 ];
 
@@ -184,19 +181,19 @@ const photosLinks = [
 const gallery = [
   {
     id: 1,
-    img: "/images/gal1.png",
+    img: PLACEHOLDER_IMAGE,
   },
   {
     id: 2,
-    img: "/images/gal2.png",
+    img: PLACEHOLDER_IMAGE,
   },
   {
     id: 3,
-    img: "/images/gal3.png",
+    img: PLACEHOLDER_IMAGE,
   },
   {
     id: 4,
-    img: "/images/gal4.png",
+    img: PLACEHOLDER_IMAGE,
   },
 ];
 
@@ -211,174 +208,55 @@ export {
   gallery,
 };
 
+const FOLDER_POSITIONS = ["top-10 left-5", "top-52 right-80", "top-10 left-80"];
+const WINDOW_POSITIONS = ["top-[5vh] left-5", "top-[20vh] left-7", "top-[33vh] left-7"];
+
 const WORK_LOCATION = {
   id: 1,
   type: "work",
   name: "Work",
   icon: "/icons/work.svg",
   kind: "folder",
-  children: [
-    // ▶ Project 1
-    {
-      id: 5,
-      name: "Nike Ecommerce Website Application",
-      icon: "/images/folder.png",
-      kind: "folder",
-      position: "top-10 left-5", // icon position inside Finder
-      windowPosition: "top-[5vh] left-5", // optional: Finder window position
-      children: [
-        {
-          id: 1,
-          name: "Nike Project.txt",
-          icon: "/images/txt.png",
-          kind: "file",
-          fileType: "txt",
-          position: "top-5 left-10",
-          description: [
-            "The Nike eCommerce website is a sleek and modern platform designed for shopping the latest Nike collections.",
-            "Instead of a simple online store, it delivers an immersive experience with bold visuals, interactive product displays, and smooth navigation.",
-            "Think of it like walking into a flagship Nike store—but right from your phone or laptop.",
-            "It's built with Next.js and Tailwind, ensuring fast performance, responsive design, and a clean, premium look.",
-          ],
-        },
-        {
-          id: 2,
-          name: "nike.com",
-          icon: "/images/safari.png",
-          kind: "file",
-          fileType: "url",
-          href: "https://youtu.be/fZdTYswuZjU?si=Awjl-pIst9e09_UU",
-          position: "top-10 right-20",
-        },
-        {
-          id: 4,
-          name: "nike.png",
-          icon: "/images/image.png",
-          kind: "file",
-          fileType: "img",
-          position: "top-52 right-80",
-          imageUrl: "/images/project-1.png",
-        },
-        {
-          id: 5,
-          name: "Design.fig",
-          icon: "/images/plain.png",
-          kind: "file",
-          fileType: "fig",
-          href: "https://google.com",
-          position: "top-60 right-20",
-        },
-      ],
-    },
-
-    // ▶ Project 2
-    {
-      id: 6,
-      name: "AI Resume Analyzer",
-      icon: "/images/folder.png",
-      kind: "folder",
-      position: "top-52 right-80",
-      windowPosition: "top-[20vh] left-7",
-      children: [
-        {
-          id: 1,
-          name: "AI Resume Analyzer Project.txt",
-          icon: "/images/txt.png",
-          kind: "file",
-          fileType: "txt",
-          position: "top-5 right-10",
-          description: [
-            "AI Resume Analyzer is a smart tool that helps you perfect your resume with instant feedback.",
-            "Instead of guessing what recruiters want, you get AI-powered insights on keywords, formatting, and overall impact.",
-            "Think of it like having a career coach—pointing out strengths, fixing weaknesses, and boosting your chances of landing interviews.",
-            "It's built with Next.js and Tailwind, so it runs fast, looks professional, and works seamlessly on any device.",
-          ],
-        },
-        {
-          id: 2,
-          name: "ai-resume-analyzer.com",
-          icon: "/images/safari.png",
-          kind: "file",
-          fileType: "url",
-          href: "https://youtu.be/iYOz165wGkQ?si=R1hs8Legl200m0Cl",
-          position: "top-20 left-20",
-        },
-        {
-          id: 4,
-          name: "ai-resume-analyzer.png",
-          icon: "/images/image.png",
-          kind: "file",
-          fileType: "img",
-          position: "top-52 left-80",
-          imageUrl: "/images/project-2.png",
-        },
-        {
-          id: 5,
-          name: "Design.fig",
-          icon: "/images/plain.png",
-          kind: "file",
-          fileType: "fig",
-          href: "https://google.com",
-          position: "top-60 left-5",
-        },
-      ],
-    },
-
-    // ▶ Project 3
-    {
-      id: 7,
-      name: "Food Delivery App",
-      icon: "/images/folder.png",
-      kind: "folder",
-      position: "top-10 left-80",
-      windowPosition: "top-[33vh] left-7",
-      children: [
-        {
-          id: 1,
-          name: "Food Delivery App Project.txt",
-          icon: "/images/txt.png",
-          kind: "file",
-          fileType: "txt",
-          position: "top-5 left-10",
-          description: [
-            "Our Food Delivery App is a fast and convenient way to order meals from your favorite restaurants.",
-            "Instead of making calls or waiting in line, you can browse menus, customize orders, and track deliveries in real time.",
-            "Think of it like having your favorite restaurants in your pocket—ready to deliver anytime, anywhere.",
-            "It’s built with React Native, so it works smoothly on both iOS and Android with a clean, modern design.",
-          ],
-        },
-        {
-          id: 2,
-          name: "food-delivery-app.com",
-          icon: "/images/safari.png",
-          kind: "file",
-          fileType: "url",
-          href: "https://youtu.be/LKrX390fJMw?si=cExkuVhf2DTV9G2-",
-          position: "top-10 right-20",
-        },
-        {
-          id: 4,
-          name: "food-delivery-app.png",
-          icon: "/images/image.png",
-          kind: "file",
-          fileType: "img",
-          position: "top-52 right-80",
-          imageUrl: "/images/project-3.png",
-        },
-        {
-          id: 5,
-          name: "Design.fig",
-          icon: "/images/plain.png",
-          kind: "file",
-          fileType: "fig",
-          href: "https://google.com",
-          position: "top-60 right-20",
-        },
-      ],
-    },
-  ],
+  children: projects.map((project, index) => ({
+    id: index + 5,
+    name: project.name,
+    icon: "/images/folder.png",
+    kind: "folder",
+    position: FOLDER_POSITIONS[index % FOLDER_POSITIONS.length],
+    windowPosition: WINDOW_POSITIONS[index % WINDOW_POSITIONS.length],
+    children: [
+      {
+        id: 1,
+        name: `${project.name}.txt`,
+        icon: "/images/txt.png",
+        kind: "file",
+        fileType: "txt",
+        position: "top-5 left-10",
+        description: [project.summary, project.problem, project.outcome],
+      },
+      ...project.links.map((link, linkIndex) => ({
+        id: 2 + linkIndex,
+        name: link.href.replace(/^https?:\/\//, ""),
+        icon: "/images/safari.png",
+        kind: "file",
+        fileType: "url",
+        href: link.href,
+        position: "top-10 right-20",
+      })),
+      {
+        id: 10,
+        name: `${project.slug}.png`,
+        icon: "/images/image.png",
+        kind: "file",
+        fileType: "img",
+        position: "top-52 right-80",
+        imageUrl: PLACEHOLDER_IMAGE,
+      },
+    ],
+  })),
 };
 
+// TODO: replace placeholder photos with real ones.
 const ABOUT_LOCATION = {
   id: 2,
   type: "about",
@@ -393,25 +271,16 @@ const ABOUT_LOCATION = {
       kind: "file",
       fileType: "img",
       position: "top-10 left-5",
-      imageUrl: "/images/adrian.jpg",
+      imageUrl: PLACEHOLDER_IMAGE,
     },
     {
       id: 2,
-      name: "casual-me.png",
+      name: "at-work.png",
       icon: "/images/image.png",
       kind: "file",
       fileType: "img",
       position: "top-28 right-72",
-      imageUrl: "/images/adrian-2.jpg",
-    },
-    {
-      id: 3,
-      name: "conference-me.png",
-      icon: "/images/image.png",
-      kind: "file",
-      fileType: "img",
-      position: "top-52 left-80",
-      imageUrl: "/images/adrian-3.jpeg",
+      imageUrl: PLACEHOLDER_IMAGE,
     },
     {
       id: 4,
@@ -420,13 +289,13 @@ const ABOUT_LOCATION = {
       kind: "file",
       fileType: "txt",
       position: "top-60 left-5",
-      subtitle: "Meet the Developer Behind the Code",
-      image: "/images/adrian.jpg",
+      subtitle: "The developer behind this desktop",
+      image: PLACEHOLDER_IMAGE,
       description: [
-        "Hey! I’m Adrian 👋, a web developer who enjoys building sleek, interactive websites that actually work well.",
-        "I specialize in JavaScript, React, and Next.js—and I love making things feel smooth, fast, and just a little bit delightful.",
-        "I’m big on clean UI, good UX, and writing code that doesn’t need a search party to debug.",
-        "Outside of dev work, you'll find me tweaking layouts at 2AM, sipping overpriced coffee, or impulse-buying gadgets I absolutely convinced myself I needed 😅",
+        "Hi, I'm Artur, a fullstack developer based in Hannover.",
+        "For the past year and a half I've built commercial products at SOL Webservice & Consulting: admin panels, ordering systems and software that talks to real machines.",
+        "I like the moment where an interface meets hardware: a scanned barcode turning into a poured drink is still my favourite demo.",
+        "Right now I study part-time and I'm open to working student roles and remote contracts.",
       ],
     },
   ],
@@ -460,21 +329,12 @@ const TRASH_LOCATION = {
   children: [
     {
       id: 1,
-      name: "trash1.png",
+      name: "first-landing.png",
       icon: "/images/image.png",
       kind: "file",
       fileType: "img",
       position: "top-10 left-10",
-      imageUrl: "/images/trash-1.png",
-    },
-    {
-      id: 2,
-      name: "trash2.png",
-      icon: "/images/image.png",
-      kind: "file",
-      fileType: "img",
-      position: "top-40 left-80",
-      imageUrl: "/images/trash-2.png",
+      imageUrl: PLACEHOLDER_IMAGE,
     },
   ],
 };
