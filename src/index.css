@@ -15,9 +15,11 @@
   --color-ink-soft: #b9b5af;
   --color-ink-faint: #8c8881;
   --color-line: rgb(242 240 237 / 0.14);
-  --color-action: #f2f0ed;
-  --color-action-hover: #ffffff;
-  --color-action-ink: #181716;
+  /* One soft lilac accent. Fill is for surfaces, accent-text is the readable variant. */
+  --color-accent: #c8b4f6;
+  --color-accent-hover: #d8c8fb;
+  --color-accent-ink: #1a1620;
+  --color-accent-text: #cdb9f8;
 
   --font-display: "Schibsted Grotesk", ui-sans-serif, system-ui, sans-serif;
 }
@@ -30,9 +32,10 @@
   --color-ink-soft: #46433f;
   --color-ink-faint: #67635e;
   --color-line: rgb(23 22 21 / 0.14);
-  --color-action: #171615;
-  --color-action-hover: #000000;
-  --color-action-ink: #f5f4f2;
+  --color-accent: #b99cf2;
+  --color-accent-hover: #aa88ee;
+  --color-accent-ink: #1a1620;
+  --color-accent-text: #5f35bd;
 }
 
 html {
@@ -54,12 +57,12 @@ body {
 }
 
 .landing ::selection {
-  background: var(--color-ink);
-  color: var(--color-stage);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
 }
 
 .landing :focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--color-accent-text);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -68,14 +71,14 @@ body {
 .landing-stage {
   background:
     radial-gradient(ellipse 48% 62% at 27% 48%, rgb(255 255 255 / 0.05), transparent 72%),
-    radial-gradient(ellipse 70% 40% at 28% 108%, rgb(255 255 255 / 0.07), transparent 70%),
+    radial-gradient(ellipse 70% 40% at 28% 108%, rgb(200 180 246 / 0.09), transparent 70%),
     var(--color-stage);
 }
 
 html[data-theme="light"] .landing-stage {
   background:
     radial-gradient(ellipse 48% 62% at 27% 48%, rgb(255 255 255 / 0.85), transparent 72%),
-    radial-gradient(ellipse 70% 40% at 28% 108%, rgb(255 255 255 / 0.6), transparent 70%),
+    radial-gradient(ellipse 70% 40% at 28% 108%, rgb(185 156 242 / 0.22), transparent 70%),
     var(--color-stage);
 }
 

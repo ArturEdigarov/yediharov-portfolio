@@ -95,7 +95,7 @@ const Intro = () => {
         <a
           href={profile.cvUrl}
           download={profile.cvFileName}
-          className="rounded-full bg-action px-5 py-2.5 text-[0.9375rem] font-semibold text-action-ink transition-colors hover:bg-action-hover"
+          className="rounded-full bg-accent px-5 py-2.5 text-[0.9375rem] font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
         >
           Download CV
         </a>
@@ -121,7 +121,7 @@ const ProjectRow = ({ project }: { project: Project }) => {
         aria-haspopup="dialog"
         className="group -mx-3 grid w-[calc(100%+1.5rem)] cursor-pointer grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1.5 rounded-xl px-3 py-5 text-left transition-colors max-md:py-3.5 hover:bg-ink/5 focus-visible:bg-ink/5"
       >
-        <span className="text-[1.75rem] leading-tight font-bold tracking-[-0.02em] text-ink decoration-1 underline-offset-[6px] group-hover:underline">
+        <span className="text-[1.75rem] leading-tight font-bold tracking-[-0.02em] text-ink decoration-accent-text decoration-2 underline-offset-[6px] group-hover:underline">
           {project.name}
         </span>
         <span className="text-sm text-ink-soft tabular-nums">{project.year}</span>
@@ -135,7 +135,7 @@ const ProjectRow = ({ project }: { project: Project }) => {
             {project.kind === 'Commercial' ? `Client work, ${project.client}` : 'Personal project'}
           </span>
           <span className="text-ink-soft">{project.stack.slice(0, 3).join(', ')}</span>
-          <span className="ml-auto flex items-center gap-1 font-semibold text-ink opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 max-md:opacity-100">
+          <span className="ml-auto flex items-center gap-1 font-semibold text-accent-text opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 max-md:opacity-100">
             Read case study
             <ArrowUpRight aria-hidden className="h-4 w-4" />
           </span>
@@ -205,7 +205,7 @@ const ScrollHint = () => {
         animate={reduceMotion ? undefined : { y: [0, 6, 0], opacity: [1, 0.45, 1] }}
         transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <ChevronDown className="h-5 w-5 text-ink" />
+        <ChevronDown className="h-5 w-5 text-accent-text" />
       </motion.span>
     </motion.div>
   )

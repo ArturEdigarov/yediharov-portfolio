@@ -42,7 +42,7 @@ const ChapterRail = () => {
                     }}
                     style={{ transform: 'scaleX(0)' }}
                     className={`absolute inset-0 origin-left rounded-full transition-colors duration-500 ${
-                      isActive ? 'bg-action' : 'bg-ink-soft'
+                      isActive ? 'bg-accent-text' : 'bg-ink-soft'
                     }`}
                   />
                 </span>
