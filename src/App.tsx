@@ -50,13 +50,11 @@ const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
             shadow-bias={-0.0002}
             shadow-camera-far={20}
           />
-          {/* HTML-слой с "привязкой" */}
-          
-          <HtmlContent />
-          
         </ScrollControls>
       </Canvas>
 
+      {/* Pinned chapter text, portalled into drei's sticky scroll layer */}
+      <HtmlContent />
       <SiteHeader />
       <ChapterRail />
       <ProjectSheet />

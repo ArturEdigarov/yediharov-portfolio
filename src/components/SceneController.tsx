@@ -2,7 +2,7 @@ import { useScroll } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import useLandingStore, { type ChapterIndex } from '../store/landing';
+import useLandingStore, { chapterFromOffset } from '../store/landing';
 
 interface SceneControllerProps {
   children: React.ReactNode;
@@ -15,15 +15,15 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
   const isOpenRef = useRef(false);
 
   useEffect(() => {
-    useLandingStore.getState().setScrollEl(scroll.el);
-  }, [scroll.el]);
+    useLandingStore.getState().setScrollElements(scroll.el, scroll.fixed);
+  }, [scroll.el, scroll.fixed]);
 
   useFrame((state) => {
     if (!group.current) return;
     const rawScroll = scroll.offset; // от 0 до 1
 
     // Report the chapter only when it changes, so React re-renders stay rare.
-    const chapter = Math.min(3, Math.round(rawScroll * 3)) as ChapterIndex;
+    const chapter = chapterFromOffset(rawScroll);
     const landing = useLandingStore.getState();
     if (landing.chapter !== chapter) landing.setChapter(chapter);
     const mappedScroll = THREE.MathUtils.clamp((rawScroll - 0.25) / (1 - 0.25), 0, 1);

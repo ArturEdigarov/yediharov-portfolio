@@ -1,24 +1,48 @@
-import { Scroll } from '@react-three/drei'
-import { motion, useReducedMotion } from 'framer-motion'
-import type { ReactNode } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useEffect, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { projects, type Project } from '../data/projects'
 import { experience, profile, stack } from '../data/profile'
 import useLandingStore from '../store/landing'
 
-// One screen-tall chapter; the text column sits to the right of the character.
-const Chapter = ({ children, labelledBy }: { children: ReactNode; labelledBy: string }) => (
-  <section aria-labelledby={labelledBy} className="relative h-screen">
-    <div className="absolute top-1/2 left-[56%] w-[min(36rem,38vw)] -translate-y-1/2 max-md:inset-x-4 max-md:w-auto max-md:rounded-2xl max-md:bg-stage/85 max-md:p-5">
-      {children}
-    </div>
-  </section>
-)
+// A pinned chapter: it stays in place while the reader scrolls through it,
+// and hands over to the next one with a short crossfade.
+const Chapter = ({ children, labelledBy }: { children: ReactNode; labelledBy: string }) => {
+  const reduceMotion = useReducedMotion()
+  const motionProps = reduceMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+    : {
+        initial: { opacity: 0, y: 32 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -32 },
+      }
+
+  return (
+    <motion.section
+      aria-labelledby={labelledBy}
+      {...motionProps}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="absolute inset-0"
+    >
+      <div className="absolute top-1/2 left-[56%] w-[min(36rem,38vw)] -translate-y-1/2 max-md:inset-x-4 max-md:w-auto max-md:rounded-2xl max-md:bg-stage/85 max-md:p-5">
+        {children}
+      </div>
+    </motion.section>
+  )
+}
+
+// The intro reveal plays once per page load, not every time the reader scrolls back.
+let introHasRevealed = false
 
 const Intro = () => {
   const reduceMotion = useReducedMotion()
+  const shouldReveal = !reduceMotion && !introHasRevealed
+  useEffect(() => {
+    introHasRevealed = true
+  }, [])
   // The single orchestrated moment on the page: name, promise, actions.
   const reveal = (delay: number) =>
-    reduceMotion
+    !shouldReveal
       ? {}
       : {
           initial: { opacity: 0, y: 16 },
@@ -144,14 +168,22 @@ const Experience = () => (
   </Chapter>
 )
 
+const CHAPTER_VIEWS = [Intro, Work, Experience]
+
+// Rendered through a portal into drei's sticky layer, so wheel and touch
+// over the text still scroll the page and drive the 3D scene.
 export const HtmlContent = () => {
-  return (
-    <Scroll html style={{ width: '100%', height: '100%' }}>
-      <div className="landing relative h-[300vh] w-screen">
-        <Intro />
-        <Work />
-        <Experience />
-      </div>
-    </Scroll>
+  const fixedEl = useLandingStore((s) => s.fixedEl)
+  const chapter = useLandingStore((s) => s.chapter)
+  if (!fixedEl) return null
+
+  // Chapter 3 is the throw: the stage belongs to the character, so no text.
+  const ChapterView = CHAPTER_VIEWS[chapter]
+
+  return createPortal(
+    <div className="landing absolute inset-0">
+      <AnimatePresence initial={false}>{ChapterView && <ChapterView key={chapter} />}</AnimatePresence>
+    </div>,
+    fixedEl,
   )
 }
