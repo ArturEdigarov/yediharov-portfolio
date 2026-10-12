@@ -35,20 +35,20 @@ const ChapterRail = () => {
                 aria-current={isActive ? 'step' : undefined}
                 className="group w-full cursor-pointer pt-3 text-left"
               >
-                <span aria-hidden className="relative block h-[3px] overflow-hidden rounded-full bg-graphite/25">
+                <span aria-hidden className="relative block h-[3px] overflow-hidden rounded-full bg-ink/15">
                   <span
                     ref={(el) => {
                       fillRefs.current[index] = el
                     }}
                     style={{ transform: 'scaleX(0)' }}
                     className={`absolute inset-0 origin-left rounded-full transition-colors duration-500 ${
-                      isActive ? 'bg-keylight' : 'bg-graphite/70'
+                      isActive ? 'bg-action' : 'bg-ink-soft'
                     }`}
                   />
                 </span>
                 <span
                   className={`mt-2 block text-xs transition-colors duration-500 ${
-                    isActive ? 'text-aluminium' : 'text-graphite group-hover:text-aluminium'
+                    isActive ? 'text-ink' : 'text-ink-soft group-hover:text-ink'
                   }`}
                 >
                   {item.label}
