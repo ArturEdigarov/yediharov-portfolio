@@ -17,7 +17,6 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
     if (!group.current) return;
     const rawScroll = scroll.offset; // от 0 до 1
     const mappedScroll = THREE.MathUtils.clamp((rawScroll - 0.25) / (1 - 0.25), 0, 1);
-    console.log('Mapped Scroll:', mappedScroll);
     // 1. Движение модели по оси X (твоя текущая логика)
     const clampedScrollForX = THREE.MathUtils.clamp(mappedScroll, 0, 0.65);
     let targetX = 0;
@@ -60,8 +59,6 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
     // Плавно двигаем саму камеру Three.js через lerp
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetCameraZ, 0.1);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetCameraY, 0.1);
-    
-    state.camera.updateProjectionMatrix();
   });
 
   return <group ref={group}>{children}</group>;
