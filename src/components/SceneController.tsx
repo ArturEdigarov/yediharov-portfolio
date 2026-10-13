@@ -4,6 +4,11 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import useLandingStore, { nextChapter, scrollOffset } from '../store/landing';
 
+// Same breakpoint as the layout (Tailwind md): below it the character is centred on screen.
+const MOBILE_MAX_WIDTH = 768;
+
+const cameraDirection = new THREE.Vector3();
+
 interface SceneControllerProps {
   children: React.ReactNode;
   onOpenDesktop: (isOpen: boolean) => void;
@@ -43,7 +48,11 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
       const progress = (clampedScrollForX - 0.5) / 0.4;
       targetX = THREE.MathUtils.lerp(0, 0.95, progress);
     }
-    group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, targetX, 0.1);
+    const isMobile = state.size.width < MOBILE_MAX_WIDTH;
+    // Desktop: the character slides right as the throw begins. Mobile centres it below.
+    if (!isMobile) {
+      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, targetX, 0.1);
+    }
 
     // 2. Движение камеры и зум в конце
     let targetCameraZ = 1.8;
@@ -71,6 +80,15 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
     // Плавно двигаем саму камеру Three.js через lerp
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetCameraZ, 0.1);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetCameraY, 0.1);
+
+    if (isMobile) {
+      // Place the character on the camera's line of sight, whatever the camera distance is.
+      // The inner character group is offset by -0.4 in App, so compensate for it here.
+      state.camera.getWorldDirection(cameraDirection);
+      const distanceToModelPlane = state.camera.position.z / -cameraDirection.z;
+      const centerX = state.camera.position.x + cameraDirection.x * distanceToModelPlane;
+      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, centerX + 0.4, 0.1);
+    }
   });
 
   return <group ref={group}>{children}</group>;
