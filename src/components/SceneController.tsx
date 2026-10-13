@@ -4,8 +4,17 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import useLandingStore, { nextChapter, scrollOffset } from '../store/landing';
 
-// Same breakpoint as the layout (Tailwind md): below it the character is centred on screen.
-const MOBILE_MAX_WIDTH = 768;
+// Phone framing. Applies below the layout breakpoint (Tailwind md) and never touches desktop.
+const MOBILE = {
+  maxWidth: 768,
+  // Multiplies the camera distance: above 1 pulls the camera back, so the character looks smaller.
+  zoomOut: 1.3,
+  // Added to the camera height: positive moves the character down on screen.
+  cameraYOffset: 0,
+  // World units the character moves sideways during the final fly-in:
+  // negative shifts it left, which brings the MacBook (on its right) to the screen centre.
+  finaleShiftX: -0.3,
+};
 
 const cameraDirection = new THREE.Vector3();
 
@@ -48,7 +57,7 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
       const progress = (clampedScrollForX - 0.5) / 0.4;
       targetX = THREE.MathUtils.lerp(0, 0.95, progress);
     }
-    const isMobile = state.size.width < MOBILE_MAX_WIDTH;
+    const isMobile = state.size.width < MOBILE.maxWidth;
     // Desktop: the character slides right as the throw begins. Mobile centres it below.
     if (!isMobile) {
       group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, targetX, 0.1);
@@ -77,6 +86,14 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
       }
     }
 
+    // How far the final fly-in has progressed, 0..1 (same range as the zoom above).
+    const flyIn = mappedScroll >= 0.85 ? (mappedScroll - 0.85) / 0.15 : 0;
+    if (isMobile) {
+      // Pull back for the whole story, then ease to the normal distance for the fly-in.
+      targetCameraZ *= THREE.MathUtils.lerp(MOBILE.zoomOut, 1, flyIn);
+      targetCameraY += MOBILE.cameraYOffset * (1 - flyIn);
+    }
+
     // Плавно двигаем саму камеру Three.js через lerp
     state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetCameraZ, 0.1);
     state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetCameraY, 0.1);
@@ -87,7 +104,8 @@ export const SceneController = ({ children, onOpenDesktop }: SceneControllerProp
       state.camera.getWorldDirection(cameraDirection);
       const distanceToModelPlane = state.camera.position.z / -cameraDirection.z;
       const centerX = state.camera.position.x + cameraDirection.x * distanceToModelPlane;
-      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, centerX + 0.4, 0.1);
+      const targetX = centerX + 0.4 + MOBILE.finaleShiftX * flyIn;
+      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, targetX, 0.1);
     }
   });
 
