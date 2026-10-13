@@ -22,7 +22,7 @@ const ChapterRail = () => {
   return (
     <nav
       aria-label="Chapters"
-      className="landing fixed bottom-6 left-[56%] z-40 w-[min(36rem,38vw)] max-md:inset-x-5 max-md:w-auto"
+      className="landing glass-panel-mobile fixed bottom-6 left-[56%] z-40 w-[min(36rem,38vw)] max-md:inset-x-4 max-md:w-auto max-md:rounded-xl max-md:px-3 max-md:pb-2"
     >
       <ol className="grid grid-cols-4 gap-3">
         {CHAPTERS.map((item, index) => {

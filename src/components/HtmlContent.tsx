@@ -12,11 +12,14 @@ const Chapter = ({
   children,
   labelledBy,
   panel = false,
+  bottomOnMobile = false,
 }: {
   children: ReactNode
   labelledBy: string
   // Chapters that sit over the character get a glass panel so text stays readable.
   panel?: boolean
+  // On phones the text drops to the lower half so the character stays visible above it.
+  bottomOnMobile?: boolean
 }) => {
   const reduceMotion = useReducedMotion()
   const shift = reduceMotion ? 0 : 14
@@ -39,10 +42,12 @@ const Chapter = ({
   return (
     <motion.section aria-labelledby={labelledBy} {...motionProps} className="absolute inset-0">
       <div
-        className={`absolute top-1/2 left-[56%] w-[min(36rem,38vw)] -translate-y-1/2 max-md:inset-x-4 max-md:top-[4.75rem] max-md:w-auto max-md:translate-y-0 ${
+        className={`absolute top-1/2 left-[56%] w-[min(36rem,38vw)] -translate-y-1/2 max-md:inset-x-4 max-md:w-auto max-md:translate-y-0 ${
+          bottomOnMobile ? 'max-md:top-auto max-md:bottom-[5.25rem]' : 'max-md:top-[4.75rem]'
+        } ${
           panel
             ? 'glass-panel rounded-3xl p-8 max-md:rounded-2xl max-md:p-5'
-            : 'max-md:rounded-2xl max-md:bg-panel max-md:p-5 max-md:backdrop-blur-xl'
+            : 'glass-panel-mobile max-md:rounded-2xl max-md:p-5'
         }`}
       >
         {children}
@@ -71,7 +76,7 @@ const Intro = () => {
         }
 
   return (
-    <Chapter labelledBy="intro-title">
+    <Chapter labelledBy="intro-title" bottomOnMobile>
       <motion.h1
         id="intro-title"
         {...reveal(0.2)}
@@ -197,9 +202,9 @@ const ScrollHint = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { duration: 0.8, delay: 1.4 } }}
       exit={{ opacity: 0, transition: { duration: 0.3 } }}
-      className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 text-ink-soft max-md:bottom-20"
+      className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1 text-ink-soft max-md:right-9 max-md:bottom-[6.2rem] max-md:left-auto max-md:translate-x-0"
     >
-      <span className="text-xs">Scroll</span>
+      <span className="text-xs max-md:hidden">Scroll</span>
       <motion.span
         aria-hidden
         animate={reduceMotion ? undefined : { y: [0, 6, 0], opacity: [1, 0.45, 1] }}
