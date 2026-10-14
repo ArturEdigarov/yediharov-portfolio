@@ -5,7 +5,7 @@ import type { FinderItem } from '../../types';
 // A project folder lying on the desktop: drag it around, click it to open it in Finder.
 const FolderIcon = ({ folder, className }: { folder: FinderItem; className: string }) => {
     const { openProjectFolder } = useAppLauncher();
-    const { ref, wasDragged } = useDesktopDrag<HTMLButtonElement>();
+    const { ref, wasDragged } = useDesktopDrag<HTMLButtonElement>(`folder-${folder.id}`);
 
     const open = () => {
         if (wasDragged() || !folder.children) return;

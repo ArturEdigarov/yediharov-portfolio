@@ -3,15 +3,18 @@ import useDesktopDrag from '../../hooks/useDesktopDrag';
 
 // A draggable card on the desktop, styled like a macOS widget.
 const Widget = ({
+    id,
     children,
     className = '',
     label,
 }: {
+    // Stable key under which the widget's position is saved.
+    id: string;
     children: ReactNode;
     className?: string;
     label: string;
 }) => {
-    const { ref } = useDesktopDrag<HTMLDivElement>();
+    const { ref } = useDesktopDrag<HTMLDivElement>(id);
 
     return (
         <section
