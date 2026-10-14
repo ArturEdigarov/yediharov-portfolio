@@ -3,10 +3,10 @@ import { useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import useWindowStore from '../store/window';
-import type { WindowKey } from '../constants';
+import useAppLauncher from '../hooks/useAppLauncher';
+import type { AppTarget } from '../constants';
 const Dock = () => {
-    const { openWindow, closeWindow, windows } = useWindowStore();
+    const { toggle } = useAppLauncher();
     const dockRef = useRef<HTMLDivElement>(null);
 
     useGSAP(() => {
@@ -46,18 +46,14 @@ const Dock = () => {
         
     }, []);
 
-    const toggleApp = (app: { id: WindowKey; canOpen: boolean }) => {
+    const toggleApp = (app: AppTarget & { canOpen: boolean }) => {
         if(!app.canOpen) return;
-        if(windows[app.id].isOpen) {
-            closeWindow(app.id);
-        }else{
-            openWindow(app.id)
-        }
+        toggle(app);
     }
   return (
     <section id="dock">
         <div ref={dockRef} className='dock-container'>
-            {dockApps.map(({id , name, icon, canOpen }) => (
+            {dockApps.map(({id , name, icon, canOpen, window, location }) => (
                 <div key={id ?? name} className='relative flex justify-center'>
                     <button type="button" 
                         className='dock-icon' 
@@ -65,7 +61,7 @@ const Dock = () => {
                         data-tooltip-id="dock-tooltip" 
                         data-tooltip-content={name} 
                         data-tooltip-delay-show={150} 
-                        disabled={!canOpen} onClick={() => toggleApp({id, canOpen})} >
+                        disabled={!canOpen} onClick={() => toggleApp({window, location, canOpen})} >
                         <img src={`/images/${icon}`} alt={name} loading='lazy' className={canOpen ? "" : "opacity-60"} />
                     </button>
                 </div>

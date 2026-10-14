@@ -1,5 +1,5 @@
 import { NavBar, Welcome, Dock } from "./components"
-import { Resume, Safari, Terminal } from "./components/windows";
+import { Contact, Finder, ImageFile, Photos, Resume, Safari, Terminal, TextFile } from "./components/windows";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable"
 import { useEffect } from "react";
@@ -33,6 +33,11 @@ const MacDesktop = ({ onClose }: { onClose: () => void }) => {
       <Terminal />
       <Safari />
       <Resume />
+      <Finder />
+      <Contact />
+      <Photos />
+      <TextFile />
+      <ImageFile />
     </main>
   )
 }

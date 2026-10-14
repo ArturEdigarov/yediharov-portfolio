@@ -1,11 +1,12 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { INITIAL_Z_INDEX, WINDOW_CONFIG, type WindowKey, type WindowState } from "../constants";
+import type { FinderItem } from "../types";
 
 interface WindowStore {
     windows: Record<WindowKey, WindowState>;
     nextZIndex: number;
-    openWindow: (windowKey: WindowKey, data?: unknown) => void;
+    openWindow: (windowKey: WindowKey, data?: FinderItem | null) => void;
     closeWindow: (windowKey: WindowKey) => void;
     focusWindow: (windowKey: WindowKey) => void;
 }
