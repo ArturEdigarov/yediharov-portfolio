@@ -23,7 +23,7 @@ const AvailabilityWidget = () => {
     const time = useLocalTime(availability.timeZone);
 
     return (
-        <Widget label="Availability" className="top-16 left-6 w-64 p-4">
+        <Widget id="availability" label="Availability" className="top-16 left-6 w-64 p-4">
             <div className="flex items-center gap-2">
                 <span className="relative flex size-2.5">
                     <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60 motion-reduce:animate-none" />
