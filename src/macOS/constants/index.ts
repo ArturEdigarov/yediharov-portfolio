@@ -1,23 +1,18 @@
 import { projects } from "../../data/projects";
+import type { FinderItem, FinderLocation, LocationKey } from "../types";
 
 const PLACEHOLDER_IMAGE = "/images/placeholder.svg";
 
-const navLinks: { id: number; name: string; type: WindowKey }[] = [
-  {
-    id: 1,
-    name: "Projects",
-    type: "finder",
-  },
-  {
-    id: 3,
-    name: "Contact",
-    type: "contact",
-  },
-  {
-    id: 4,
-    name: "Resume",
-    type: "resume",
-  },
+// What an app launches: a window, optionally pointing Finder at a location.
+interface AppTarget {
+  window: WindowKey;
+  location?: LocationKey;
+}
+
+const navLinks: (AppTarget & { id: number; name: string })[] = [
+  { id: 1, name: "Projects", window: "finder", location: "work" },
+  { id: 3, name: "Contact", window: "contact" },
+  { id: 4, name: "Resume", window: "resume" },
 ];
 
 const navIcons = [
@@ -39,42 +34,50 @@ const navIcons = [
   },
 ];
 
-const dockApps: { id: WindowKey; name: string; icon: string; canOpen: boolean }[] = [
+const dockApps: (AppTarget & { id: string; name: string; icon: string; canOpen: boolean })[] = [
   {
     id: "finder",
     name: "Portfolio", // was "Finder"
     icon: "finder.png",
     canOpen: true,
+    window: "finder",
+    location: "work",
   },
   {
     id: "safari",
     name: "Articles", // was "Safari"
     icon: "safari.png",
     canOpen: true,
+    window: "safari",
   },
   {
     id: "photos",
     name: "Gallery", // was "Photos"
     icon: "photos.png",
     canOpen: true,
+    window: "photos",
   },
   {
     id: "contact",
     name: "Contact", // or "Get in touch"
     icon: "contact.png",
     canOpen: true,
+    window: "contact",
   },
   {
     id: "terminal",
     name: "Skills", // was "Terminal"
     icon: "terminal.png",
     canOpen: true,
+    window: "terminal",
   },
   {
     id: "trash",
     name: "Archive", // was "Trash"
     icon: "trash.png",
-    canOpen: false,
+    canOpen: true,
+    window: "finder",
+    location: "trash",
   },
 ];
 
@@ -209,21 +212,19 @@ export {
 };
 
 const FOLDER_POSITIONS = ["top-10 left-5", "top-52 right-80", "top-10 left-80"];
-const WINDOW_POSITIONS = ["top-[5vh] left-5", "top-[20vh] left-7", "top-[33vh] left-7"];
 
-const WORK_LOCATION = {
+const WORK_LOCATION: FinderLocation = {
   id: 1,
   type: "work",
   name: "Work",
   icon: "/icons/work.svg",
   kind: "folder",
-  children: projects.map((project, index) => ({
+  children: projects.map((project, index): FinderItem => ({
     id: index + 5,
     name: project.name,
     icon: "/images/folder.png",
     kind: "folder",
     position: FOLDER_POSITIONS[index % FOLDER_POSITIONS.length],
-    windowPosition: WINDOW_POSITIONS[index % WINDOW_POSITIONS.length],
     children: [
       {
         id: 1,
@@ -234,7 +235,7 @@ const WORK_LOCATION = {
         position: "top-5 left-10",
         description: [project.summary, project.problem, project.outcome],
       },
-      ...project.links.map((link, linkIndex) => ({
+      ...project.links.map((link, linkIndex): FinderItem => ({
         id: 2 + linkIndex,
         name: link.href.replace(/^https?:\/\//, ""),
         icon: "/images/safari.png",
@@ -257,7 +258,7 @@ const WORK_LOCATION = {
 };
 
 // TODO: replace placeholder photos with real ones.
-const ABOUT_LOCATION = {
+const ABOUT_LOCATION: FinderLocation = {
   id: 2,
   type: "about",
   name: "About me",
@@ -301,7 +302,7 @@ const ABOUT_LOCATION = {
   ],
 };
 
-const RESUME_LOCATION = {
+const RESUME_LOCATION: FinderLocation = {
   id: 3,
   type: "resume",
   name: "Resume",
@@ -320,10 +321,10 @@ const RESUME_LOCATION = {
   ],
 };
 
-const TRASH_LOCATION = {
+const TRASH_LOCATION: FinderLocation = {
   id: 4,
   type: "trash",
-  name: "Trash",
+  name: "Archive",
   icon: "/icons/trash.svg",
   kind: "folder",
   children: [
@@ -339,7 +340,7 @@ const TRASH_LOCATION = {
   ],
 };
 
-export const locations = {
+export const locations: Record<LocationKey, FinderLocation> = {
   work: WORK_LOCATION,
   about: ABOUT_LOCATION,
   resume: RESUME_LOCATION,
@@ -351,7 +352,8 @@ const INITIAL_Z_INDEX = 1000;
 export interface WindowState {
   isOpen: boolean;
   zIndex: number;
-  data: unknown;
+  // The file a window was opened with (text and image windows read it).
+  data: FinderItem | null;
 }
 
 const WINDOW_CONFIG = {
@@ -363,9 +365,9 @@ const WINDOW_CONFIG = {
   terminal: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
   txtfile: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
   imgfile: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
-  trash: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
 } satisfies Record<string, WindowState>;
 
 export type WindowKey = keyof typeof WINDOW_CONFIG;
+export type { AppTarget };
 
 export { INITIAL_Z_INDEX, WINDOW_CONFIG };

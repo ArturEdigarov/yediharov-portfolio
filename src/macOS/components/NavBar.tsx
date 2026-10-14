@@ -1,32 +1,27 @@
 import dayjs from 'dayjs';
 
-import { navLinks, navIcons, type WindowKey } from '../constants/index.ts';
-import useWindowStore from '../store/window';
+import { navLinks, navIcons } from '../constants/index.ts';
+import useAppLauncher from '../hooks/useAppLauncher';
 
 
-type NavItem = {
-  id: number;
-  name: string;
-  type: WindowKey;
-}
 type Icon = {
   id: number; 
   img: string;
 }
 
 const NavBar = () => {
-    const { openWindow } = useWindowStore();
+    const { launch } = useAppLauncher();
 
   return (
     <nav>
         <div>   
             <img src="/images/logo.svg" alt="logo" />
-            <p className='font-bold'> Artur Yediharov`s Portfolio</p>
+            <p className='font-bold'> Artur Yediharov’s Portfolio</p>
         
 
             <ul>
-                {navLinks.map((item: NavItem) => (
-                        <li key={item.id} onClick={() => openWindow(item.type)}>
+                {navLinks.map((item) => (
+                        <li key={item.id} onClick={() => launch(item)}>
                             <p>{item.name}</p>
                         </li>
                     ))}
