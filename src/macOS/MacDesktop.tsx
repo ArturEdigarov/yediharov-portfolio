@@ -1,4 +1,4 @@
-import { NavBar, Welcome, Dock } from "./components"
+import { NavBar, Welcome, Dock, Desktop } from "./components"
 import { Contact, Finder, ImageFile, Photos, Resume, Safari, Terminal, TextFile } from "./components/windows";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable"
@@ -28,6 +28,7 @@ const MacDesktop = ({ onClose }: { onClose: () => void }) => {
     <main id="mac-root-container">
       <NavBar />
       <Welcome />
+      <Desktop />
       <Dock />
 
       <Terminal />
