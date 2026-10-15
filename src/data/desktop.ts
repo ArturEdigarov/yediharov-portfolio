@@ -7,6 +7,8 @@ export interface DesktopPhoto {
   alt: string;
   // Tailwind size and start position of the widget.
   className: string;
+  // Keeps the widget in the data but off the desktop. Remove the flag to bring it back.
+  hidden?: boolean;
 }
 
 export const desktopPhotos: DesktopPhoto[] = [
@@ -14,19 +16,20 @@ export const desktopPhotos: DesktopPhoto[] = [
     id: "photo-square",
     src: "/images/placeholder.svg",
     alt: "Photo placeholder, square",
-    className: "left-6 top-[19rem] size-52",
+    className: "left-[18.5rem] top-16 size-52",
   },
   {
     id: "photo-wide",
     src: "/images/placeholder.svg",
     alt: "Photo placeholder, wide",
-    className: "left-6 top-[33.5rem] h-36 w-60",
+    className: "left-6 top-[18.75rem] h-36 w-60",
   },
   {
     id: "photo-tall",
     src: "/images/placeholder.svg",
     alt: "Photo placeholder, tall",
     className: "bottom-24 right-6 h-56 w-44",
+    hidden: true,
   },
 ];
 

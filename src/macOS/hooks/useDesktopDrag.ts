@@ -11,7 +11,7 @@ let topZIndex = BASE_Z_INDEX;
 
 // Positions are saved as offsets from each item's default spot (set by its CSS classes).
 // Bump the version if the default spots are rearranged, so old offsets are not reused.
-const STORAGE_KEY = "desktop-layout-v1";
+const STORAGE_KEY = "desktop-layout-v2";
 
 type Offset = { x: number; y: number };
 type Layout = Record<string, Offset>;
