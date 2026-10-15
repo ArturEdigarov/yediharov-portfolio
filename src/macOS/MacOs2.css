@@ -2,17 +2,6 @@
 
 @import "tailwindcss";
 
-html,
-body {
-  width: 100dvw;
-  overflow: hidden;
-  height: 100dvh;
-  background-image: url("/images/wallpaper.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
 @theme {
   --font-georama: "Georama", sans-serif;
   --font-roboto: "Roboto Mono", monospace;

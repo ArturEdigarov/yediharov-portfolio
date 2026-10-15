@@ -4,12 +4,11 @@ import { Model as Character } from './components/model.tsx'
 import { SceneController } from './components/SceneController.tsx'
 import { HtmlContent } from './components/HtmlContent.tsx'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
-import MacDesktop from './macOS/MacDesktop.tsx'
+import { lazy, Suspense, useState } from 'react'
 import useLandingStore from './store/landing.ts'
 
-import './macOS/MacOs.css'
-import './macOS/MacOs2.css'
+// The macOS desktop (windows, PDF viewer, fonts, wallpaper) is only needed at the end of the scroll.
+const MacDesktop = lazy(() => import('./macOS/MacDesktop.tsx'))
 import SiteHeader from './components/SiteHeader.tsx'
 import ChapterRail from './components/ChapterRail.tsx'
 import ProjectSheet from './components/ProjectSheet.tsx'
@@ -39,7 +38,8 @@ const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
           </SceneController>
 
           {/* Свет и окружение */}
-          <Environment preset="city" />
+          {/* Self-hosted copy of the drei "city" preset, so no third-party server is needed. */}
+          <Environment files="/hdri/potsdamer_platz_1k.hdr" />
           <ambientLight intensity={0.3} />
           <directionalLight
             castShadow
@@ -73,14 +73,15 @@ const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
               height: '100vh',
               zIndex: 9999,
               pointerEvents: 'auto',
-              backgroundImage: "url('/images/wallpaper.jpeg')", // Добавили url() и убрали ../
+              backgroundImage: "url('/images/wallpaper.webp')",
               backgroundSize: 'cover',   // Чтобы картинка заполнила весь экран
               backgroundPosition: 'center'
             }}
           >
             
-            {/* Твой компонент macOS */}
-            <MacDesktop onClose={() => setIsDesktopOpen(false)}/>
+            <Suspense fallback={null}>
+              <MacDesktop onClose={() => setIsDesktopOpen(false)}/>
+            </Suspense>
           </motion.div>
         )}
       </AnimatePresence>
