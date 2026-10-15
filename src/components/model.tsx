@@ -11,6 +11,9 @@ import * as THREE from 'three'
 
 const MODEL_URL = '/models/character.glb'
 
+// Serve the Draco decoder from our own domain instead of a third-party CDN.
+useGLTF.setDecoderPath('/draco/')
+
 type ModelGraph = {
   nodes: {
     model: THREE.SkinnedMesh

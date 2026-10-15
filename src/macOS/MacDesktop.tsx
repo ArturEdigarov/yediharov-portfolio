@@ -1,10 +1,20 @@
 import { NavBar, Welcome, Dock, Desktop } from "./components"
-import { Contact, Finder, ImageFile, Photos, Resume, Safari, Terminal, TextFile } from "./components/windows";
+import { Contact, Finder, ImageFile, Photos, Safari, Terminal, TextFile } from "./components/windows";
+import useWindowStore from "./store/window";
 import gsap from "gsap";
 import { Draggable } from "gsap/Draggable"
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import "./MacOs2.css";
+
+// react-pdf is heavy, so it is fetched only when the resume is opened for the first time.
+const Resume = lazy(() => import("./components/windows/Resume"));
 gsap.registerPlugin(Draggable);
 const MacDesktop = ({ onClose }: { onClose: () => void }) => {
+  const resumeOpen = useWindowStore((s) => s.windows.resume.isOpen);
+  // Once the resume has been opened, keep it mounted so closing and reopening is instant.
+  const [resumeRequested, setResumeRequested] = useState(resumeOpen);
+  if (resumeOpen && !resumeRequested) setResumeRequested(true);
+
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       // Если пользователь крутит колесико вверх (ему нужен обратный скролл сайта)
@@ -33,7 +43,11 @@ const MacDesktop = ({ onClose }: { onClose: () => void }) => {
 
       <Terminal />
       <Safari />
-      <Resume />
+      {resumeRequested && (
+        <Suspense fallback={null}>
+          <Resume />
+        </Suspense>
+      )}
       <Finder />
       <Contact />
       <Photos />
