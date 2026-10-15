@@ -223,7 +223,9 @@ const CHAPTER_VIEWS = [Intro, Work, Experience]
 export const HtmlContent = () => {
   const fixedEl = useLandingStore((s) => s.fixedEl)
   const chapter = useLandingStore((s) => s.chapter)
-  if (!fixedEl) return null
+  const bootDone = useLandingStore((s) => s.bootDone)
+  // Wait for the loading screen so the intro animation plays in view, not behind it.
+  if (!fixedEl || !bootDone) return null
 
   // Chapter 3 is the throw: the stage belongs to the character, so no text.
   const ChapterView = CHAPTER_VIEWS[chapter]

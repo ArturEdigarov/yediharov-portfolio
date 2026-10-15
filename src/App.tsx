@@ -1,14 +1,18 @@
 import { Canvas } from '@react-three/fiber'
-import { Environment, ScrollControls } from '@react-three/drei'
+import { Environment, Preload, ScrollControls } from '@react-three/drei'
 import { Model as Character } from './components/model.tsx'
 import { SceneController } from './components/SceneController.tsx'
+import { SceneReady } from './components/SceneReady.tsx'
+import Loader from './components/Loader.tsx'
 import { HtmlContent } from './components/HtmlContent.tsx'
 import { AnimatePresence, motion } from 'framer-motion'
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import useLandingStore from './store/landing.ts'
 
 // The macOS desktop (windows, PDF viewer, fonts, wallpaper) is only needed at the end of the scroll.
-const MacDesktop = lazy(() => import('./macOS/MacDesktop.tsx'))
+const loadMacDesktop = () => import('./macOS/MacDesktop.tsx')
+const MacDesktop = lazy(loadMacDesktop)
+const DESKTOP_WALLPAPER = '/images/wallpaper.webp'
 import SiteHeader from './components/SiteHeader.tsx'
 import ChapterRail from './components/ChapterRail.tsx'
 import ProjectSheet from './components/ProjectSheet.tsx'
@@ -16,6 +20,23 @@ import ProjectSheet from './components/ProjectSheet.tsx'
 function App() {
 const [isDesktopOpen, setIsDesktopOpen] = useState(false)
 const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
+const sceneReady = useLandingStore((s) => s.sceneReady)
+
+// Once the first screen is up and the browser is idle, fetch the desktop and its wallpaper
+// so they are already there by the end of the scroll.
+useEffect(() => {
+  if (!sceneReady) return
+  const prefetch = () => {
+    void loadMacDesktop()
+    new Image().src = DESKTOP_WALLPAPER
+  }
+  if ('requestIdleCallback' in window) {
+    const id = window.requestIdleCallback(prefetch, { timeout: 4000 })
+    return () => window.cancelIdleCallback(id)
+  }
+  const id = setTimeout(prefetch, 2000)
+  return () => clearTimeout(id)
+}, [sceneReady])
 
   return (
     <>
@@ -31,15 +52,21 @@ const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
         
         <ScrollControls pages={4} damping={0.2}>
           
-          <SceneController onOpenDesktop={(isOpen) => setIsDesktopOpen(isOpen)}>
-            <group position={[-0.4, -1.3, 0]}>
-              <Character />
-            </group>
-          </SceneController>
+          {/* Everything heavy suspends here together; the loader covers it until the first frames are drawn. */}
+          <Suspense fallback={null}>
+            <SceneController onOpenDesktop={(isOpen) => setIsDesktopOpen(isOpen)}>
+              <group position={[-0.4, -1.3, 0]}>
+                <Character />
+              </group>
+            </SceneController>
 
-          {/* Свет и окружение */}
-          {/* Self-hosted copy of the drei "city" preset, so no third-party server is needed. */}
-          <Environment files="/hdri/potsdamer_platz_1k.hdr" />
+            {/* Self-hosted copy of the drei "city" preset, so no third-party server is needed. */}
+            <Environment files="/hdri/potsdamer_platz_1k.hdr" />
+            <Preload all />
+            <SceneReady />
+          </Suspense>
+
+          {/* Свет */}
           <ambientLight intensity={0.3} />
           <directionalLight
             castShadow
@@ -57,6 +84,7 @@ const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
       <SiteHeader />
       <ChapterRail />
       <ProjectSheet />
+      <Loader />
 
       <AnimatePresence>
         {isDesktopOpen && (
@@ -73,7 +101,7 @@ const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
               height: '100vh',
               zIndex: 9999,
               pointerEvents: 'auto',
-              backgroundImage: "url('/images/wallpaper.webp')",
+              backgroundImage: `url('${DESKTOP_WALLPAPER}')`,
               backgroundSize: 'cover',   // Чтобы картинка заполнила весь экран
               backgroundPosition: 'center'
             }}

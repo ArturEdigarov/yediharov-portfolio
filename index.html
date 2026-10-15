@@ -26,15 +26,45 @@
         }
       })()
     </script>
+    <!-- Start the heavy files now, in parallel with the script, but behind the CSS and JS that paint the first frame. Same URLs and mode as the loaders use. -->
+    <link rel="preload" href="/models/character.glb" as="fetch" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" href="/hdri/potsdamer_platz_1k.hdr" as="fetch" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" href="/draco/draco_wasm_wrapper.js" as="fetch" crossorigin="anonymous" fetchpriority="low" />
+    <link rel="preload" href="/draco/draco_decoder.wasm" as="fetch" crossorigin="anonymous" fetchpriority="low" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Non-blocking: the loading screen paints with a system font first, then the font swaps in. -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..900&display=swap"
+      />
+    </noscript>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- First frame, painted before any JavaScript runs. Keep in sync with src/components/Loader.tsx. -->
+      <div id="boot" class="landing landing-stage fixed inset-0 z-[100]">
+        <div class="mx-auto flex h-full max-w-7xl flex-col justify-between px-6 py-5 max-sm:px-4">
+          <span class="text-[0.9375rem] font-bold tracking-tight">Artur Yediharov</span>
+          <span
+            class="pb-6 text-[clamp(5rem,14vw,11rem)] leading-[0.8] font-extrabold tracking-[-0.04em] tabular-nums"
+            >0<span class="ml-1 align-top text-[0.18em] font-bold tracking-normal text-ink-soft">%</span></span
+          >
+        </div>
+        <span class="absolute inset-x-0 bottom-0 h-[3px] overflow-hidden bg-ink/15">
+          <span class="boot-shimmer absolute inset-y-0 w-1/3 bg-accent-text"></span>
+        </span>
+      </div>
+    </div>
+    <noscript>This portfolio needs JavaScript to run.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
