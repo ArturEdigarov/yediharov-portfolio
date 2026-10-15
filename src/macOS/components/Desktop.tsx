@@ -12,7 +12,7 @@ const projectFolders = locations.work.children.filter((item) => item.kind === 'f
 const Desktop = () => (
     <div id="desktop" className="max-sm:hidden">
         <AvailabilityWidget />
-        {desktopPhotos.map((photo) => (
+        {desktopPhotos.filter((photo) => !photo.hidden).map((photo) => (
             <PhotoWidget key={photo.id} photo={photo} />
         ))}
         {projectFolders.map((folder, index) => (
