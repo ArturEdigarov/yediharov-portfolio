@@ -68,6 +68,12 @@ interface LandingStore {
   // drei's sticky layer inside the scroll container: content here stays put while scrolling.
   fixedEl: HTMLElement | null;
   openProjectSlug: string | null;
+  // The 3D scene has rendered its first frames with everything loaded.
+  sceneReady: boolean;
+  // The loading screen has finished; chapter text may start to animate in.
+  bootDone: boolean;
+  setSceneReady: () => void;
+  finishBoot: () => void;
   setChapter: (chapter: ChapterIndex) => void;
   setScrollElements: (scrollEl: HTMLElement, fixedEl: HTMLElement) => void;
   goToChapter: (chapter: ChapterIndex) => void;
@@ -88,7 +94,11 @@ const useLandingStore = create<LandingStore>()((set, get) => ({
   scrollEl: null,
   fixedEl: null,
   openProjectSlug: null,
+  sceneReady: false,
+  bootDone: false,
 
+  setSceneReady: () => set({ sceneReady: true }),
+  finishBoot: () => set({ bootDone: true }),
   setChapter: (chapter) => set({ chapter }),
   setScrollElements: (scrollEl, fixedEl) => set({ scrollEl, fixedEl }),
 

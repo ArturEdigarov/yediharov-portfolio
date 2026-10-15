@@ -119,3 +119,25 @@ html[data-theme="light"] .landing-stage {
     background: var(--color-sheet);
   }
 }
+
+/* Static loading frame in index.html: a bar sweeps until React takes over with real progress. */
+@keyframes boot-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+.boot-shimmer {
+  animation: boot-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-shimmer {
+    animation: none;
+    width: 100%;
+    opacity: 0.4;
+  }
+}
