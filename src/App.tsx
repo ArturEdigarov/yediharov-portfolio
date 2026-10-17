@@ -7,11 +7,15 @@ import Loader from './components/Loader.tsx'
 import { HtmlContent } from './components/HtmlContent.tsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import { lazy, Suspense, useEffect, useState } from 'react'
+import useIsPhone from './hooks/useIsPhone.ts'
 import useLandingStore from './store/landing.ts'
 
 // The macOS desktop (windows, PDF viewer, fonts, wallpaper) is only needed at the end of the scroll.
 const loadMacDesktop = () => import('./macOS/MacDesktop.tsx')
 const MacDesktop = lazy(loadMacDesktop)
+// Phones get an iPhone home screen instead.
+const loadIosDesktop = () => import('./ios/IosDesktop.tsx')
+const IosDesktop = lazy(loadIosDesktop)
 const DESKTOP_WALLPAPER = '/images/wallpaper.webp'
 import SiteHeader from './components/SiteHeader.tsx'
 import ChapterRail from './components/ChapterRail.tsx'
@@ -21,13 +25,20 @@ function App() {
 const [isDesktopOpen, setIsDesktopOpen] = useState(false)
 const isProjectOpen = useLandingStore((s) => s.openProjectSlug !== null)
 const sceneReady = useLandingStore((s) => s.sceneReady)
+const isPhone = useIsPhone()
+
+// Leaving the phone screen returns to the story: scroll back up so the scene wakes up again.
+const leavePhoneScreen = () => {
+  setIsDesktopOpen(false)
+  useLandingStore.getState().goToChapter(2)
+}
 
 // Once the first screen is up and the browser is idle, fetch the desktop and its wallpaper
 // so they are already there by the end of the scroll.
 useEffect(() => {
   if (!sceneReady) return
   const prefetch = () => {
-    void loadMacDesktop()
+    void (isPhone ? loadIosDesktop() : loadMacDesktop())
     new Image().src = DESKTOP_WALLPAPER
   }
   if ('requestIdleCallback' in window) {
@@ -36,11 +47,11 @@ useEffect(() => {
   }
   const id = setTimeout(prefetch, 2000)
   return () => clearTimeout(id)
-}, [sceneReady])
+}, [sceneReady, isPhone])
 
   return (
     <>
-    <div className="landing-stage" style={{ width: '100vw', height: '100vh', position:"relative", overflow: 'hidden'}}>
+    <div className="landing-stage" style={{ width: '100vw', height: '100dvh', position:"relative", overflow: 'hidden'}}>
       
       {/* Canvas теперь на весь экран, но скролл будет управлять контентом */}
       {/* Pause rendering while an overlay fully covers the scene. */}
@@ -98,7 +109,7 @@ useEffect(() => {
               top: 0,
               left: 0,
               width: '100vw',
-              height: '100vh',
+              height: '100dvh',
               zIndex: 9999,
               pointerEvents: 'auto',
               backgroundImage: `url('${DESKTOP_WALLPAPER}')`,
@@ -108,7 +119,7 @@ useEffect(() => {
           >
             
             <Suspense fallback={null}>
-              <MacDesktop onClose={() => setIsDesktopOpen(false)}/>
+              {isPhone ? <IosDesktop onClose={leavePhoneScreen} /> : <MacDesktop onClose={() => setIsDesktopOpen(false)} />}
             </Suspense>
           </motion.div>
         )}
