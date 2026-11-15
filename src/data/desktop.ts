@@ -11,16 +11,17 @@ export interface DesktopPhoto {
   hidden?: boolean;
   // CSS object-position, to choose which part of the picture stays in view.
   focus?: string;
+  // The one picture the iPhone home screen shows in its small photo widget.
+  onPhone?: boolean;
 }
 
 export const desktopPhotos: DesktopPhoto[] = [
   {
-    id: "photo-square",
-    src: "/projects/solmix/machine-photo.webp",
-    alt: "The SOLMIX cocktail machine running at a real event",
-    className: "left-[18.5rem] top-16 size-52",
-    // Keeps the machine in frame and the neighbouring brand logo out of it.
-    focus: "30% 16%",
+    id: "photo-machine",
+    src: "/projects/solmix/mockup-machine.webp",
+    alt: "The SOLMIX cocktail machine at an event, next to its touch interface",
+    // 16:9, the shape of the mockup, so nothing is cropped.
+    className: "left-[18.5rem] top-16 h-[11.25rem] w-80",
   },
   {
     id: "photo-wide",
@@ -34,6 +35,7 @@ export const desktopPhotos: DesktopPhoto[] = [
     alt: "Portrait of Artur Yediharov",
     className: "bottom-24 right-6 h-56 w-44",
     focus: "50% 22%",
+    onPhone: true,
   },
 ];
 

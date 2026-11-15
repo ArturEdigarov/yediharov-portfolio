@@ -234,7 +234,10 @@ export const projects: Project[] = [
       { value: "8", label: "screens, in desktop and phone layouts" },
       { value: "PWA", label: "installable on a phone" },
     ],
-    links: [{ label: "View the source", href: "https://github.com/ArturEdigarov/Garov-Social-App" }],
+    links: [
+      { label: "Open the live app", href: "https://garov-social-app-mvp.vercel.app/sign-in" },
+      { label: "View the source", href: "https://github.com/ArturEdigarov/Garov-Social-App" },
+    ],
     cover: {
       src: `${garov}/mockup-hero.webp`,
       alt: "Garov Social home feed and profile on a laptop and two phones",

@@ -32,10 +32,10 @@ export const liveLinks: LiveLink[] = [
   },
   {
     id: 3,
-    tag: "Source code, React and TypeScript",
-    title: "Garov Social: a social network with Appwrite",
+    tag: "Live web app",
+    title: "Garov Social: sign up and try the social network",
     image: find("garov-social").cover.src,
-    href: "https://github.com/ArturEdigarov/Garov-Social-App",
+    href: "https://garov-social-app-mvp.vercel.app/sign-in",
   },
   {
     id: 4,
@@ -89,7 +89,7 @@ export const archiveProjects: ArchiveProject[] = [
     name: "Garov Social",
     meta: "React, TypeScript and Appwrite",
     description: find("garov-social").summary,
-    href: "https://github.com/ArturEdigarov/Garov-Social-App",
+    href: "https://garov-social-app-mvp.vercel.app/sign-in",
     image: find("garov-social").cover.src,
   },
 ];
