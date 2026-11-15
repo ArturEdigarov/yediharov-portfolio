@@ -33,7 +33,9 @@
         --soft: #4c4740;
         --faint: #7a746b;
         --line: #dedad2;
-        --accent: #ee6418;
+        /* Two tones of the site's lilac: light on the dark header, deep on white for readable text and lines. */
+        --accent: #c8b4f6;
+        --accent-ink: #5f35bd;
       }
       * {
         box-sizing: border-box;
@@ -168,7 +170,7 @@
         position: absolute;
         inset: 2.4mm -2.4mm -2.4mm 2.4mm;
         border-radius: 5mm;
-        background: #3a2a1d;
+        background: #2b2340;
       }
       .portrait {
         position: relative;
@@ -208,7 +210,7 @@
         height: 0.9mm;
         margin: 1.4mm 0;
         border-radius: 1mm;
-        background: var(--accent);
+        background: var(--accent-ink);
       }
       .kpi span {
         display: block;
@@ -238,7 +240,7 @@
         width: 4.6mm;
         height: 0.9mm;
         border-radius: 1mm;
-        background: var(--accent);
+        background: var(--accent-ink);
       }
       .main section + section {
         margin-top: 3.6mm;
@@ -296,12 +298,12 @@
       }
       .solo {
         padding: 0.3mm 2.2mm;
-        border: 0.3mm solid var(--accent);
+        border: 0.3mm solid var(--accent-ink);
         border-radius: 99mm;
         font-size: 6.4pt;
         font-weight: 700;
         letter-spacing: 0.1em;
-        color: var(--accent);
+        color: var(--accent-ink);
       }
       .main ul {
         margin: 1.4mm 0 0;
@@ -320,7 +322,7 @@
         top: 1.5mm;
         width: 1.3mm;
         height: 1.3mm;
-        background: var(--accent);
+        background: var(--accent-ink);
         transform: rotate(45deg);
       }
       .main li b {
@@ -346,7 +348,7 @@
         font-size: 7.4pt;
         font-weight: 700;
         white-space: nowrap;
-        color: var(--accent);
+        color: var(--accent-ink);
       }
       .links a + a {
         margin-left: 3mm;
@@ -418,7 +420,7 @@
         font-style: normal;
         font-size: 7.2pt;
         font-weight: 600;
-        color: var(--accent);
+        color: var(--accent-ink);
       }
       .edu span {
         display: block;

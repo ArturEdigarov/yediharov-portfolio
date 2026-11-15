@@ -46,7 +46,7 @@ const Chapter = ({
           bottomOnMobile ? 'max-md:top-auto max-md:bottom-[5.25rem]' : 'max-md:top-[4.75rem]'
         } ${
           panel
-            ? 'glass-panel rounded-3xl p-8 max-md:rounded-2xl max-md:p-5'
+            ? 'glass-panel rounded-3xl p-8 max-md:rounded-2xl max-md:p-5 [@media(max-height:760px)]:p-5'
             : 'glass-panel-mobile max-md:rounded-2xl max-md:p-5'
         }`}
       >
@@ -185,7 +185,7 @@ const Work = () => (
 
 const Experience = () => (
   <Chapter labelledBy="experience-title" panel>
-    <h2 id="experience-title" className="text-[2.25rem] leading-tight font-bold tracking-tight text-ink">
+    <h2 id="experience-title" className="text-[2.25rem] leading-tight font-bold tracking-tight text-ink [@media(max-height:760px)]:text-[1.75rem]">
       Experience
     </h2>
 

@@ -25,7 +25,7 @@ export const profile = {
   // One honest paragraph for the About text file and the contact card.
   about: [
     "I'm Artur, a fullstack developer in Hannover. I build web products end to end, from the interface down to the machines it controls.",
-    "Since October 2025 I work at SOL Webservice & Consulting. There I rebuilt a booking system that ran on plain PHP since 2008 on Laravel and Filament, and wrote the Go and React software that runs a cocktail machine on a Raspberry Pi. That machine served an event with 250 guests.",
+    "Since October 2025 I work at SOL Webservice & Consulting. There I rebuilt a booking system that ran on plain PHP since 2008 on Laravel and Filament, and wrote the Go and React software that runs a cocktail machine on a Raspberry Pi. That machine served an event with 250 guests. I also build and maintain websites and online shops on WordPress, TYPO3 and Magento 2.",
     "On my own I built Garov, a social network with React, TypeScript and Appwrite. I like the moment where an interface meets something real, like a QR code turning into a poured drink.",
     "I'm looking for my next role as a developer, and I'm open to employment or contract work, on site or remote.",
   ],
@@ -44,7 +44,7 @@ export const experience: TimelineEntry[] = [
     period: "Oct 2025 – now",
     title: "Software developer",
     place: "SOL Webservice & Consulting",
-    detail: "Rebuilt a 2008 booking system on Laravel and Filament, and wrote the software for a cocktail machine used at a 250 guest event.",
+    detail: "Rebuilt a 2008 booking system on Laravel and Filament, wrote the software for a cocktail machine used at a 250 guest event, and maintained Magento 2 shops.",
   },
   {
     period: "Aug 2024 – Oct 2025",
@@ -73,6 +73,7 @@ export const stack = [
   { area: "Frontend", tools: ["React", "TypeScript", "Tailwind CSS", "Three.js", "GSAP"] },
   { area: "Backend", tools: ["Laravel", "PHP", "Go", "Appwrite"] },
   { area: "Quality", tools: ["Pest", "GitHub Actions", "Git", "Docker"] },
+  { area: "CMS and shops", tools: ["Magento 2", "WordPress", "TYPO3"] },
 ];
 
 export const languages = [
