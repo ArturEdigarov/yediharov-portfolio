@@ -21,8 +21,8 @@ const Contact = () => {
                 />
                 <h3>Let's talk</h3>
                 <p>
-                    I'm open to working student roles at 20 hours a week and to remote contracts.
-                    Write to me, and I will reply as soon as I can.
+                    I'm looking for my next role as a developer, and I'm open to employment or contract work,
+                    on site or remote. Write to me, and I will reply as soon as I can.
                 </p>
                 <a href={`mailto:${profile.email}`} className="block font-medium underline underline-offset-4">
                     {profile.email}

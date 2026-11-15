@@ -93,7 +93,7 @@ const Intro = () => {
 
       <motion.p {...reveal(0.45)} className="mt-4 max-w-[46ch] text-base leading-relaxed text-ink-soft">
         Fullstack developer in Hannover with over a year of commercial experience.
-        Open to working student roles at 20 hours a week and to remote contracts.
+        Open to new roles as a developer: employment or contract, on site or remote.
       </motion.p>
 
       <motion.div {...reveal(0.6)} className="mt-8 flex flex-wrap items-center gap-3">

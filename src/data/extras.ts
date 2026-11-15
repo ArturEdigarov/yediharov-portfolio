@@ -1,5 +1,5 @@
-// Content for the smaller apps: Live (links), Archive (older projects) and the photo gallery.
-// Everything marked `// FACT?` is inferred from repository names and languages. Confirm it.
+// Content for the smaller apps: Live (links), Archive (selected work) and the photo gallery.
+// Everything marked `// FACT?` is inferred and needs your confirmation.
 
 import { profile } from "./profile";
 import { projectImages, projects, type ProjectImage } from "./projects";
@@ -49,56 +49,48 @@ export const liveLinks: LiveLink[] = [
 export interface ArchiveProject {
   id: number;
   name: string;
-  year: string;
-  language: string;
+  // Short line under the name, e.g. the kind of work and the tools.
+  meta: string;
   description: string;
-  href: string;
+  // Missing for private client work, which has no public page.
+  href?: string;
+  image?: string;
 }
 
-const repo = (name: string) => `https://github.com/ArturEdigarov/${name}`;
-
-// Earlier projects, from before the commercial work. Newest first.
+// Selected work beyond the three case studies' own pages. Older practice projects are left out on purpose.
 export const archiveProjects: ArchiveProject[] = [
   {
     id: 1,
-    name: "Money Flow",
-    year: "2025",
-    language: "PHP",
+    name: "Kohlhoff Projekte",
+    meta: "Company website, WordPress and Elementor",
+    // FACT? Confirm what you built: the whole site, the design, or the WordPress setup.
     description:
-      "A tool for personal finances: income and expenses with categories, a transaction history and clear charts. Every user sees only their own data, and it installs as a PWA.",
-    href: repo("money-flow"),
+      "Website for Kohlhoff Projekte, a real estate company that finds, secures and develops sites and properties for commercial and industrial users in Germany and Europe. I built it.",
+    href: "https://kohlhoffprojekte.de/",
+    image: "/projects/kohlhoff/home.webp",
   },
   {
     id: 2,
-    name: "To-do list",
-    year: "2025",
-    language: "PHP",
-    description: "A to-do list in PHP, an early practice project.", // FACT?
-    href: repo("To-do-list"),
+    name: "FeWoBooking",
+    meta: "Laravel and Filament, solo rebuild of a 2008 system",
+    description: find("fewobooking").summary,
+    image: find("fewobooking").cover.src,
   },
   {
     id: 3,
-    name: "Gaming platform",
-    year: "2025",
-    language: "PHP",
-    description: "A gaming platform in PHP, an early practice project.", // FACT?
-    href: repo("gaming-platform"),
+    name: "SOLMIX",
+    meta: "Go, React and Raspberry Pi, used at a 250 guest event",
+    description: find("solmix").summary,
+    href: "https://solmix-bar.vercel.app",
+    image: find("solmix").cover.src,
   },
   {
     id: 4,
-    name: "Smooth scroll",
-    year: "2025",
-    language: "HTML and CSS",
-    description: "An experiment with smooth scrolling, my first step toward scroll-driven pages like this one.", // FACT?
-    href: repo("Smooth-scroll-"),
-  },
-  {
-    id: 5,
-    name: "Burger landing",
-    year: "2025",
-    language: "HTML and CSS",
-    description: "A landing page for a burger place, built to practise layout.", // FACT?
-    href: repo("Burger-Landing"),
+    name: "Garov Social",
+    meta: "React, TypeScript and Appwrite",
+    description: find("garov-social").summary,
+    href: "https://github.com/ArturEdigarov/Garov-Social-App",
+    image: find("garov-social").cover.src,
   },
 ];
 
