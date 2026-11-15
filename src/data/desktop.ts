@@ -7,11 +7,12 @@ export interface DesktopPhoto {
   alt: string;
   // Tailwind size and start position of the widget.
   className: string;
-  // Keeps the widget in the data but off the desktop. Remove the flag to bring it back.
+  // Keeps the widget in the data but off the desktop. Set `hidden: true` to hide it again.
   hidden?: boolean;
+  // CSS object-position, to choose which part of the picture stays in view.
+  focus?: string;
 }
 
-// TODO: add a real photo of Artur here when there is one.
 export const desktopPhotos: DesktopPhoto[] = [
   {
     id: "photo-square",
@@ -27,10 +28,10 @@ export const desktopPhotos: DesktopPhoto[] = [
   },
   {
     id: "photo-tall",
-    src: "/projects/garov-social/02-home-feed-mobile.webp",
-    alt: "Garov Social home feed on a phone",
+    src: "/images/artur.webp",
+    alt: "Portrait of Artur Yediharov",
     className: "bottom-24 right-6 h-56 w-44",
-    hidden: true,
+    focus: "50% 22%",
   },
 ];
 

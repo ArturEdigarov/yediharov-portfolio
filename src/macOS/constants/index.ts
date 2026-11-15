@@ -164,7 +164,12 @@ const WORK_LOCATION: FinderLocation = {
         kind: "file",
         fileType: "txt",
         subtitle: project.summary,
-        description: [project.problem, ...project.contribution, project.outcome],
+        description: [
+          project.problem,
+          ...project.contribution,
+          ...project.decisions.map((decision) => `${decision.title}: ${decision.text}`),
+          project.outcome,
+        ],
       },
       ...project.links.map((link) => ({
         name: link.label,
@@ -195,7 +200,6 @@ const WORK_LOCATION: FinderLocation = {
   }),
 };
 
-// TODO: add photos of Artur (me.png) when there are some.
 const ABOUT_LOCATION: FinderLocation = {
   id: 2,
   type: "about",
@@ -211,7 +215,18 @@ const ABOUT_LOCATION: FinderLocation = {
       fileType: "txt",
       position: slot(0),
       subtitle: "The developer behind this desktop",
+      image: profile.portrait.src,
       description: profile.about,
+    },
+    {
+      id: 2,
+      name: "me.png",
+      icon: profile.portrait.small,
+      kind: "file",
+      fileType: "img",
+      position: slot(1),
+      imageUrl: profile.portrait.src,
+      subtitle: profile.portrait.alt,
     },
   ],
 };

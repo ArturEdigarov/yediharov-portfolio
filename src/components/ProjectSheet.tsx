@@ -102,6 +102,17 @@ const CaseStudy = ({ project, onZoom }: { project: Project; onZoom: (index: numb
         </ul>
       </SheetSection>
 
+      <SheetSection title="Key decisions">
+        <dl className="max-w-[60ch] space-y-5">
+          {project.decisions.map((decision) => (
+            <div key={decision.title}>
+              <dt className="font-semibold text-ink">{decision.title}</dt>
+              <dd className="mt-1">{decision.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </SheetSection>
+
       <SheetSection title="Result">
         <p className="max-w-[60ch]">{project.outcome}</p>
         <dl className="mt-6 grid grid-cols-3 gap-6 max-sm:grid-cols-2">

@@ -4,11 +4,6 @@ import { availability } from '../../data/desktop'
 import { languages, profile } from '../../data/profile'
 import { Group, Row } from '../components/Screen'
 
-const initials = profile.name
-  .split(' ')
-  .map((part) => part[0])
-  .join('')
-
 const Action = ({
   Icon,
   label,
@@ -36,10 +31,13 @@ const Action = ({
 const ContactApp = () => (
   <div className="no-scrollbar absolute inset-0 overflow-y-auto overscroll-contain bg-[var(--ios-grouped-bg)] pt-[64px] pb-[50px]">
     <div className="flex flex-col items-center px-5">
-      {/* TODO: replace the initials with a real portrait. */}
-      <div className="grid size-[100px] place-items-center rounded-full bg-gradient-to-b from-[#a4a4ad] to-[#6d6d75] text-[40px] font-medium text-white shadow-[0_2px_10px_rgb(0_0_0/0.25)]">
-        {initials}
-      </div>
+      <img
+        src={profile.portrait.small}
+        alt={profile.portrait.alt}
+        draggable={false}
+        className="size-[100px] rounded-full object-cover shadow-[0_2px_10px_rgb(0_0_0/0.25)]"
+        style={{ objectPosition: profile.portrait.focus }}
+      />
       <h1 className="mt-3.5 text-[28px] leading-8 font-semibold tracking-[-0.02em]">{profile.name}</h1>
       <p className="mt-0.5 text-[15px] text-[var(--ios-label-2)]">Fullstack developer, {availability.place}</p>
     </div>

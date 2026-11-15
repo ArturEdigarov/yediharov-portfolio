@@ -76,6 +76,16 @@ const ProjectDetail = ({
       ))}
     </ul>
 
+    <h3 className="px-5 pt-8 pb-2 text-[22px] leading-7 font-bold tracking-[-0.02em]">Key decisions</h3>
+    <dl className="space-y-4 px-5">
+      {project.decisions.map((decision) => (
+        <div key={decision.title}>
+          <dt className="text-[17px] leading-[22px] font-semibold">{decision.title}</dt>
+          <dd className="mt-0.5 text-[17px] leading-[23px] text-[var(--ios-label-2)]">{decision.text}</dd>
+        </div>
+      ))}
+    </dl>
+
     <h3 className="px-5 pt-8 pb-2 text-[22px] leading-7 font-bold tracking-[-0.02em]">Result</h3>
     <p className="px-5 text-[17px] leading-[23px] text-[var(--ios-label-2)]">{project.outcome}</p>
     <dl className="mt-4 grid grid-cols-3 gap-2 px-4">
