@@ -80,7 +80,7 @@ const Finder = () => {
                                         alt=""
                                         loading="lazy"
                                         draggable={false}
-                                        className="!h-[4.25rem] !w-28 rounded-md !object-cover shadow-md ring-1 ring-black/10"
+                                        className="!h-[4.25rem] !w-28 rounded-md !object-cover !object-[50%_22%] shadow-md ring-1 ring-black/10"
                                     />
                                 ) : (
                                     <img src={item.icon} alt="" />

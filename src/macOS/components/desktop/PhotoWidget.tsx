@@ -3,7 +3,13 @@ import Widget from './Widget';
 
 const PhotoWidget = ({ photo }: { photo: DesktopPhoto }) => (
     <Widget id={photo.id} label="Photo" className={`p-0 ${photo.className}`}>
-        <img src={photo.src} alt={photo.alt} draggable={false} className="size-full object-cover" />
+        <img
+        src={photo.src}
+        alt={photo.alt}
+        draggable={false}
+        className="size-full object-cover"
+        style={{ objectPosition: photo.focus }}
+      />
     </Widget>
 );
 

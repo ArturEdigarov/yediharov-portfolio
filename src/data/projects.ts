@@ -9,6 +9,11 @@ export interface ProjectMetric {
   label: string;
 }
 
+export interface ProjectDecision {
+  title: string;
+  text: string;
+}
+
 export interface ProjectLink {
   label: string;
   href: string;
@@ -33,6 +38,8 @@ export interface Project {
   stack: string[];
   problem: string;
   contribution: string[];
+  // The choices that shaped the project and why. Shown as "Key decisions".
+  decisions: ProjectDecision[];
   outcome: string;
   metrics: ProjectMetric[];
   links: ProjectLink[];
@@ -54,28 +61,51 @@ export const projects: Project[] = [
   {
     slug: "fewobooking",
     name: "FeWoBooking",
-    summary: "Landlord admin for holiday homes, rebuilt from a legacy PHP system on Laravel and Filament.",
+    summary: "I rebuilt a booking system for holiday homes, written in plain PHP in 2008, from scratch on Laravel and Filament.",
     kind: "Commercial",
     client: "SOL Webservice & Consulting",
     year: "2026",
-    role: "Fullstack developer", // FACT? confirm your exact share of the work
-    stack: ["Laravel 13", "Filament 5", "PHP", "Tailwind CSS 4", "Pest", "GitHub Actions"],
+    role: "Fullstack developer, solo",
+    stack: ["Laravel 13", "Filament 5", "PHP 8.3", "Tailwind CSS 4", "Pest", "GitHub Actions"],
     problem:
-      "Landlords ran bookings, prices, guests and contracts on an ageing PHP system that was hard to change and hard to trust. Every new rule risked breaking an old one.",
-    // FACT? Check which of these parts were yours, and reword anything that was a team effort.
+      "The booking system had run since 2008 on plain PHP, with no framework behind it. It still handled the bookings, prices and rental contracts of real landlords, but every change was risky and the admin looked and worked like it was built in 2008.",
     contribution: [
-      "Migrated the legacy PHP system to Laravel and Filament, keeping its price engine so existing quotes stay the same.",
-      "Built the dashboard: revenue by month, booking sources, occupancy and open payments for every property.",
-      "Built the booking flow from request to rental contract: confirm, record payments, generate the contract and message the guest.",
-      "Added seasons, discounts, vouchers, surcharges and tourist tax, plus an availability calendar across all properties.",
-      "Covered the system with 232 Pest tests and a GitHub Actions pipeline, and made it work on phones with a light and a dark theme.",
+      "Rewrote the whole system from scratch on Laravel 13 and Filament 5: properties, guests, bookings, seasons, discounts, vouchers, surcharges and tourist tax.",
+      "Ported the price engine of the old system, so the rules landlords rely on carried over into the new code.",
+      "Built the booking flow from request to rental contract: confirm, record payments in instalments, generate the contract and message the guest with attachments.",
+      "Built one dashboard for all properties: revenue by month, booking sources, occupancy and open payments, plus an availability calendar across every house.",
+      "Wrote 232 automated tests with Pest and a GitHub Actions pipeline, so a change to prices or bookings is checked before it ships.",
+      "Made it responsive for phones and added a light and a dark theme.",
+    ],
+    // FACT? The reasons below are my reading of the choices. Correct them in your own words.
+    decisions: [
+      {
+        title: "Rewrite, not patch",
+        text: "An 18-year-old codebase with a 41-table database was no longer a safe place to add features. A new codebase on a framework with conventions made every later change cheaper.",
+      },
+      {
+        title: "Filament for the admin",
+        text: "An admin is mostly tables, forms and filters, and Filament provides them. My time went into the booking and price rules, which are the part of the product nobody else has.",
+      },
+      {
+        title: "Port the price engine, then test it",
+        text: "Prices are what a landlord can least afford to get wrong, so I ported the existing engine instead of redesigning it, and covered it with 232 Pest tests.",
+      },
+      {
+        title: "Many properties, one view",
+        text: "Landlords rarely have a single house, so the dashboard and the availability calendar work across all of them at once.",
+      },
+      {
+        title: "Phone and dark mode from the start",
+        text: "Landlords answer requests on the go, so every screen works on a phone, in a light and in a dark theme.",
+      },
     ],
     outcome:
-      "Landlords manage every property, booking and price in one place, on desktop or phone, and the rebuilt system is covered by an automated test suite.",
+      "Landlords manage every property, booking and price in one modern admin, on desktop or phone, and the system that ran on 2008 code is now covered by an automated test suite.",
     metrics: [
+      { value: "2008", label: "the year of the PHP system I replaced" },
       { value: "232", label: "automated tests" },
-      { value: "1", label: "legacy system migrated" },
-      { value: "2", label: "themes, light and dark" },
+      { value: "100%", label: "rebuilt from scratch, solo" },
     ],
     links: [],
     cover: {
@@ -101,27 +131,50 @@ export const projects: Project[] = [
   {
     slug: "solmix",
     name: "SOLMIX",
-    summary: "Software for a real cocktail machine: scan a QR code, pick a recipe, and nine pumps pour the drink.",
+    summary: "Software for a real cocktail machine: scan a QR code, pick a recipe, and nine pumps pour it. Used at an event with 250 guests.",
     kind: "Commercial",
     client: "SOL Webservice & Consulting",
     year: "2026",
-    role: "Fullstack developer", // FACT? confirm
+    role: "Software developer, solo",
     stack: ["Go", "Wails", "React", "TypeScript", "Raspberry Pi GPIO", "Tailwind CSS", "Docker"],
     problem:
-      "A cocktail machine is only useful if guests can operate it without a bartender, and the drink has to come out the same every time, at an event with a queue.",
+      "A cocktail machine is only useful if guests can operate it without a bartender, and the drink has to come out the same every time, even with a queue at an event.",
     contribution: [
-      "Wrote the controller in Go: it turns a recipe into pump runtimes from each pump's flow rate and switches nine pumps through the Raspberry Pi GPIO pins.",
-      "Built the touch interface in React: a recipe grid, a QR and barcode scanner, a recipe detail view and a live progress dial while the drink pours.",
+      "Wrote all the software: the Go controller, the touch interface and the phone app.",
+      "In Go, the controller turns a recipe into pump runtimes from each pump's flow rate and switches nine pumps through the Raspberry Pi GPIO pins.",
+      "Built the touch interface in React: a recipe grid, a QR and barcode scanner, a recipe view and a live progress dial while the drink pours.",
       "Packaged it as a fullscreen desktop app with Wails, so the machine runs as a kiosk.",
-      "Tracked how much liquid is left in every container, and added an admin screen to calibrate and prime each pump.",
-      "Built a phone web app where guests mix their own drink with limits of 200 ml per glass and 50 ml of alcohol, and send it to the machine as a barcode.",
+      "Tracked how much liquid is left in every container, and built an admin screen to calibrate and prime each pump.",
+      "Built a phone web app where guests mix their own drink, within 200 ml per glass and 50 ml of alcohol, and send it to the machine as a barcode.",
+    ],
+    decisions: [
+      {
+        title: "A barcode between the phone and the machine",
+        text: "The phone encodes all nine pump values into a CODE128 barcode, and the machine reads it with a USB scanner that types like a keyboard. No Wi-Fi, no pairing and no server sit between the guest and the pumps.",
+      },
+      {
+        title: "Limits in the software",
+        text: "The sliders lock at 200 ml per glass and 50 ml of alcohol, so nobody can order an unsafe drink, whatever they do on the screen.",
+      },
+      {
+        title: "Go on the Pi, React for the screen",
+        text: "Go handles the timing and the GPIO pins, where reliability matters. React and Wails give a touch interface that boots into one fullscreen app.",
+      },
+      {
+        title: "Dose by time, from flow rate",
+        text: "Each pump has a measured flow rate, so a recipe in millilitres becomes a runtime in milliseconds. The same drink comes out the same every time.",
+      },
+      {
+        title: "Built to be operated by a stranger",
+        text: "Container levels are tracked, and every pump can be calibrated and primed from an admin screen, so the person at the event only has to refill.",
+      },
     ],
     outcome:
-      "The machine ran at a real event: guests scan, choose and get a consistent drink, while the operator only refills the containers.",
+      "The software was built for clients, tested on a working machine assembled for that purpose, and then ran at an event with 250 guests.",
     metrics: [
+      { value: "250", label: "guests at the event" },
       { value: "9", label: "pumps controlled" },
       { value: "3", label: "steps from QR code to drink" },
-      { value: "200 ml", label: "glass limit, 50 ml of alcohol" },
     ],
     links: [
       { label: "Open the web app", href: "https://solmix-bar.vercel.app" },
@@ -156,10 +209,24 @@ export const projects: Project[] = [
       "I wanted to know how a real social product holds together: sign-in, image uploads, feeds that never stop loading, and an interface that feels as good on a phone as on a desktop.",
     contribution: [
       "Built sign-up, sessions and protected routes on top of Appwrite.",
-      "Built the home feed and an explore page with search, popular posts and an infinite scroll.",
+      "Built the home feed and an explore page with debounced search, popular posts and infinite scroll.",
       "Added image posts with drag and drop upload, likes, saved posts and a post detail page.",
       "Added profiles, an all-users page and following, with validated forms using React Hook Form and Zod.",
       "Made it responsive with a bottom tab bar on phones, installable as a PWA, and deployed through Vercel.",
+    ],
+    decisions: [
+      {
+        title: "Appwrite instead of my own backend",
+        text: "Authentication, the database and file storage came from Appwrite, so I could spend the time on the interface and on how it feels.",
+      },
+      {
+        title: "TanStack Query for the data",
+        text: "Cached queries keep the feed and the profile instant, and the infinite scroll loads only what the reader is about to see.",
+      },
+      {
+        title: "Validation before the network",
+        text: "Forms are checked with Zod and React Hook Form first, so mistakes are caught on the screen, not after a round trip.",
+      },
     ],
     outcome:
       "A working full-stack app that I use myself: fast thanks to cached queries, and installable on a phone's home screen.",
