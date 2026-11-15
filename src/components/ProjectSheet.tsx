@@ -5,19 +5,20 @@ import { getProject, projectImages, projects, type Project, type ProjectImage } 
 import useLandingStore, { projectSlugFromHash } from '../store/landing'
 
 // A picture that opens full size. `tint` is what shows while it loads.
+// `compact` is for phone screenshots: a small, fixed height so they read as phones, not as banners.
 const Picture = ({
   image,
   tint,
   onZoom,
   className = '',
-  imgClassName = 'w-full',
+  compact = false,
   priority = false,
 }: {
   image: ProjectImage
   tint: string
   onZoom: (element: HTMLElement) => void
   className?: string
-  imgClassName?: string
+  compact?: boolean
   priority?: boolean
 }) => (
   <figure className={className}>
@@ -25,7 +26,9 @@ const Picture = ({
       type="button"
       onClick={(event) => onZoom(event.currentTarget)}
       aria-label={`View full size: ${image.caption ?? image.alt}`}
-      className="group block w-full cursor-zoom-in overflow-hidden rounded-xl ring-1 ring-line"
+      className={`group cursor-zoom-in overflow-hidden ring-1 ring-line ${
+        compact ? 'inline-block rounded-2xl' : 'block w-full rounded-xl'
+      }`}
       style={{ backgroundColor: tint }}
     >
       <img
@@ -34,7 +37,9 @@ const Picture = ({
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
         draggable={false}
-        className={`block h-auto transition-transform duration-500 group-hover:scale-[1.02] ${imgClassName}`}
+        className={`block transition-transform duration-500 group-hover:scale-[1.02] ${
+          compact ? 'h-72 w-auto max-w-none max-sm:h-64' : 'h-auto w-full'
+        }`}
       />
     </button>
     {image.caption && <figcaption className="mt-2 text-sm text-ink-soft">{image.caption}</figcaption>}
@@ -149,7 +154,7 @@ const CaseStudy = ({ project, onZoom }: { project: Project; onZoom: (index: numb
                 key={image.src}
                 image={image}
                 tint={project.tint}
-                imgClassName="h-80 w-auto max-w-none"
+                compact
                 className="shrink-0 snap-start"
                 onZoom={(element) => onZoom(1 + project.gallery.length + index, element)}
               />
