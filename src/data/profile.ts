@@ -23,7 +23,7 @@ export const profile = {
     "I'm Artur, a fullstack developer in Hannover. I build web products end to end, from the interface down to the machines it controls.",
     "Since October 2025 I work at SOL Webservice & Consulting. There I rebuilt a booking system that ran on plain PHP since 2008 on Laravel and Filament, and wrote the Go and React software that runs a cocktail machine on a Raspberry Pi. That machine served an event with 250 guests.",
     "On my own I built Garov, a social network with React, TypeScript and Appwrite. I like the moment where an interface meets something real, like a QR code turning into a poured drink.",
-    "I study part-time at the Schiller-Gymnasium in Hameln, and I'm looking for a working student role at 20 hours a week or a remote contract.",
+    "I'm looking for my next role as a developer, and I'm open to employment or contract work, on site or remote.",
   ],
 };
 

@@ -60,7 +60,13 @@ export const PhotoWidget = ({ onPress }: { onPress: (el: HTMLElement) => void })
       aria-label="Photos, open gallery"
       className={`${WIDGET_CLASS} h-full w-full transition-transform duration-150 active:scale-[0.97]`}
     >
-      <img src={photo.src} alt="" draggable={false} className="size-full object-cover" />
+      <img
+        src={photo.src}
+        alt=""
+        draggable={false}
+        className="size-full object-cover"
+        style={{ objectPosition: photo.focus }}
+      />
     </button>
   )
 }

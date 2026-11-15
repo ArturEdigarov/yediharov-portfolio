@@ -256,27 +256,29 @@ const TRASH_LOCATION: FinderLocation = {
   name: "Archive",
   icon: "/icons/trash.svg",
   kind: "folder",
-  children: [
-    ...archiveProjects.map((project, index): FinderItem => ({
-      id: index + 1,
-      name: `${project.name}.txt`,
-      icon: "/images/txt.png",
-      kind: "file",
-      fileType: "txt",
-      position: slot(index),
-      subtitle: `${project.language}, ${project.year}`,
-      description: [project.description, project.href.replace(/^https?:\/\//, "")],
-    })),
-    {
-      id: archiveProjects.length + 1,
-      name: "github.com",
-      icon: "/images/safari.png",
-      kind: "file",
-      fileType: "url",
-      href: profile.github,
-      position: slot(archiveProjects.length),
-    },
-  ],
+  children: archiveProjects
+    .flatMap((project): Omit<FinderItem, "id" | "position">[] => [
+      {
+        name: `${project.name}.txt`,
+        icon: "/images/txt.png",
+        kind: "file",
+        fileType: "txt",
+        subtitle: project.meta,
+        description: [project.description],
+      },
+      ...(project.href
+        ? [
+            {
+              name: project.href.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, ""),
+              icon: "/images/safari.png",
+              kind: "file" as const,
+              fileType: "url" as const,
+              href: project.href,
+            },
+          ]
+        : []),
+    ])
+    .map((file, index) => ({ ...file, id: index + 1, position: slot(index) })),
 };
 
 export const locations: Record<LocationKey, FinderLocation> = {

@@ -19,6 +19,8 @@ export const desktopPhotos: DesktopPhoto[] = [
     src: "/projects/solmix/machine-photo.webp",
     alt: "The SOLMIX cocktail machine running at a real event",
     className: "left-[18.5rem] top-16 size-52",
+    // Keeps the machine in frame and the neighbouring brand logo out of it.
+    focus: "30% 16%",
   },
   {
     id: "photo-wide",
@@ -39,6 +41,6 @@ export const availability = {
   status: "Open to work",
   timeZone: "Europe/Berlin",
   place: "Hannover, Germany",
-  looking: ["Working student, 20 h per week", "Remote contracts"],
+  looking: ["Fullstack developer roles", "Employment or contract, on site or remote"],
   languages: ["English B2", "German B2"],
 };
