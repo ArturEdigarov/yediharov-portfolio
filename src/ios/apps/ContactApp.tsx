@@ -46,7 +46,7 @@ const ContactApp = () => (
       <Action Icon={Mail} label="Email" href={`mailto:${profile.email}`} />
       <Action Icon={Briefcase} label="LinkedIn" href={profile.linkedin} />
       <Action Icon={Code} label="GitHub" href={profile.github} />
-      <Action Icon={FileDown} label="CV" href={profile.cvUrl} download={profile.cvFileName} />
+      <Action Icon={FileDown} label="Resume" href={profile.cvUrl} download={profile.cvFileName} />
     </div>
 
     <Group className="mt-5">

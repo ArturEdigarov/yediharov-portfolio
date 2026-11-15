@@ -102,7 +102,7 @@ const Intro = () => {
           download={profile.cvFileName}
           className="rounded-full bg-accent px-5 py-2.5 text-[0.9375rem] font-semibold text-accent-ink transition-colors hover:bg-accent-hover"
         >
-          Download CV
+          Download resume
         </a>
         <a
           href={`mailto:${profile.email}`}

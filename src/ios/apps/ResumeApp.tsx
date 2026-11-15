@@ -6,18 +6,17 @@ import { Screen } from '../components/Screen'
 const ResumeApp = () => (
   <Screen title="Resume">
     <div className="flex flex-col items-center px-8 pt-4">
-      <div aria-hidden className="w-[62%] rounded-[6px] bg-white p-4 shadow-[0_6px_24px_rgb(0_0_0/0.28)]">
-        <div className="mb-3 h-2 w-2/3 rounded-full bg-[#1c1c1e]" />
-        {[100, 88, 94, 70, 100, 82, 90, 60].map((width, index) => (
-          <div key={index} className="mb-[7px] h-[5px] rounded-full bg-[#d1d1d6]" style={{ width: `${width}%` }} />
-        ))}
-        <div className="mt-4 mb-3 h-2 w-1/3 rounded-full bg-[#1c1c1e]" />
-        {[96, 80, 100, 66].map((width, index) => (
-          <div key={index} className="mb-[7px] h-[5px] rounded-full bg-[#d1d1d6]" style={{ width: `${width}%` }} />
-        ))}
-      </div>
+      <a
+        href={profile.cvUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open the resume"
+        className="block w-[68%] overflow-hidden rounded-[6px] bg-white shadow-[0_6px_24px_rgb(0_0_0/0.28)] transition-opacity active:opacity-70"
+      >
+        <img src={profile.cvPreview} alt="First page of the resume" draggable={false} className="block h-auto w-full" />
+      </a>
       <p className="mt-6 text-[17px] font-semibold">{profile.cvFileName}</p>
-      <p className="mt-0.5 text-[14px] text-[var(--ios-label-2)]">PDF document</p>
+      <p className="mt-0.5 text-[14px] text-[var(--ios-label-2)]">PDF, one page</p>
     </div>
 
     <div className="mt-8 space-y-3 px-4">

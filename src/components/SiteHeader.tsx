@@ -68,7 +68,8 @@ const SiteHeader = () => {
             download={profile.cvFileName}
             className="ml-2 rounded-full bg-accent px-4 py-1.5 font-semibold whitespace-nowrap text-accent-ink transition-colors hover:bg-accent-hover"
           >
-            Download CV
+            <span className="max-sm:hidden">Download resume</span>
+            <span className="sm:hidden">Resume</span>
           </a>
         </div>
       </div>
