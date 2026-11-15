@@ -41,7 +41,7 @@ const Finder = () => {
                 <Search className="icon" />
             </div>
 
-            <div className="flex h-full min-h-[26rem] bg-white">
+            <div className="flex h-full min-h-[31rem] bg-white">
                 <div className="sidebar">
                     <div>
                         <h3>Favorites</h3>
@@ -73,7 +73,18 @@ const Finder = () => {
                                 onClick={() => openItem(item)}
                                 className="group flex cursor-pointer flex-col items-center gap-3 rounded-md p-1 focus-visible:outline-2"
                             >
-                                <img src={item.icon} alt="" />
+                                {item.fileType === 'img' ? (
+                                    // The picture itself, as a thumbnail with a soft frame.
+                                    <img
+                                        src={item.icon}
+                                        alt=""
+                                        loading="lazy"
+                                        draggable={false}
+                                        className="!h-[4.25rem] !w-28 rounded-md !object-cover shadow-md ring-1 ring-black/10"
+                                    />
+                                ) : (
+                                    <img src={item.icon} alt="" />
+                                )}
                                 <p>{item.name}</p>
                             </button>
                         </li>

@@ -1,7 +1,7 @@
+import { archiveProjects, galleryPhotos, liveLinks } from "../../data/extras";
+import { profile, stack } from "../../data/profile";
 import { projects } from "../../data/projects";
 import type { FinderItem, FinderLocation, LocationKey } from "../types";
-
-const PLACEHOLDER_IMAGE = "/images/placeholder.svg";
 
 // What an app launches: a window, optionally pointing Finder at a location.
 interface AppTarget {
@@ -45,7 +45,7 @@ const dockApps: (AppTarget & { id: string; name: string; icon: string; canOpen: 
   },
   {
     id: "safari",
-    name: "Articles", // was "Safari"
+    name: "Live", // was "Safari"
     icon: "safari.png",
     canOpen: true,
     window: "safari",
@@ -81,52 +81,9 @@ const dockApps: (AppTarget & { id: string; name: string; icon: string; canOpen: 
   },
 ];
 
-// TODO: replace with real posts or project updates.
-const blogPosts = [
-  {
-    id: 1,
-    date: "Jul 7, 2026",
-    title: "SOLMIX: ordering interface for an automated cocktail bar",
-    image: PLACEHOLDER_IMAGE,
-    link: "https://solmix-bar.vercel.app",
-  },
-  {
-    id: 2,
-    date: "Mar 27, 2026",
-    title: "Garov Social: a React and Appwrite social network",
-    image: PLACEHOLDER_IMAGE,
-    link: "https://github.com/ArturEdigarov/Garov-Social-App",
-  },
-  {
-    id: 3,
-    date: "Sep 9, 2025",
-    title: "Money Flow: a personal finance tracker in PHP",
-    image: PLACEHOLDER_IMAGE,
-    link: "https://github.com/ArturEdigarov/money-flow",
-  },
-];
-
+// The Skills window: the stack from the CV and the projects, grouped.
 const techStack = [
-  {
-    category: "Frontend",
-    items: ["React.js", "TypeScript", "JavaScript"],
-  },
-  {
-    category: "Styling",
-    items: ["GSAP", "Tailwind CSS", "CSS"],
-  },
-  {
-    category: "Backend",
-    items: ["GOlang", "PHP", "Python"],
-  },
-  {
-    category: "Database",
-    items: ["MongoDB", "PostgreSQL", "Appwrite"],
-  },
-  {
-    category: "Dev Tools",
-    items: ["Git", "GitHub", "Docker"],
-  },
+  ...stack.map(({ area, tools }) => ({ category: area, items: tools })),
 ];
 
 const socials = [
@@ -153,58 +110,23 @@ const socials = [
   },
 ];
 
+// Sidebar of the Photos window. Decorative: it names the projects the pictures come from.
 const photosLinks = [
-  {
-    id: 1,
-    icon: "/icons/gicon1.svg",
-    title: "Library",
-  },
-  {
-    id: 2,
-    icon: "/icons/gicon2.svg",
-    title: "Memories",
-  },
-  {
-    id: 3,
-    icon: "/icons/file.svg",
-    title: "Places",
-  },
-  {
-    id: 4,
-    icon: "/icons/gicon4.svg",
-    title: "People",
-  },
-  {
-    id: 5,
-    icon: "/icons/gicon5.svg",
-    title: "Favorites",
-  },
+  { id: 1, icon: "/icons/gicon1.svg", title: "Library" },
+  ...projects.map((project, index) => ({
+    id: index + 2,
+    icon: ["/icons/gicon2.svg", "/icons/file.svg", "/icons/gicon4.svg"][index % 3],
+    title: project.name,
+  })),
 ];
 
-const gallery = [
-  {
-    id: 1,
-    img: PLACEHOLDER_IMAGE,
-  },
-  {
-    id: 2,
-    img: PLACEHOLDER_IMAGE,
-  },
-  {
-    id: 3,
-    img: PLACEHOLDER_IMAGE,
-  },
-  {
-    id: 4,
-    img: PLACEHOLDER_IMAGE,
-  },
-];
+const gallery = galleryPhotos.map(({ id, src, name, alt }) => ({ id, img: src, name, alt }));
 
 export {
   navLinks,
   navIcons,
   dockApps,
-  blogPosts,
+  liveLinks,
   techStack,
   socials,
   photosLinks,
@@ -213,51 +135,67 @@ export {
 
 const FOLDER_POSITIONS = ["top-10 left-5", "top-52 right-80", "top-10 left-80"];
 
+// Icon slots inside a Finder window: three columns, as many rows as needed.
+const FILE_SLOTS = [
+  "top-5 left-6",
+  "top-5 left-[12rem]",
+  "top-5 left-[23rem]",
+  "top-[10.5rem] left-6",
+  "top-[10.5rem] left-[12rem]",
+  "top-[10.5rem] left-[23rem]",
+  "top-[20rem] left-6",
+  "top-[20rem] left-[12rem]",
+  "top-[20rem] left-[23rem]",
+];
+const slot = (index: number) => FILE_SLOTS[index % FILE_SLOTS.length];
+
 const WORK_LOCATION: FinderLocation = {
   id: 1,
   type: "work",
   name: "Work",
   icon: "/icons/work.svg",
   kind: "folder",
-  children: projects.map((project, index): FinderItem => ({
-    id: index + 5,
-    name: project.name,
-    icon: "/images/folder.png",
-    kind: "folder",
-    position: FOLDER_POSITIONS[index % FOLDER_POSITIONS.length],
-    children: [
+  children: projects.map((project, index): FinderItem => {
+    // Order of the icons: the story, the links, then the pictures.
+    const files: Omit<FinderItem, "id" | "position">[] = [
       {
-        id: 1,
         name: `${project.name}.txt`,
         icon: "/images/txt.png",
         kind: "file",
         fileType: "txt",
-        position: "top-5 left-10",
-        description: [project.summary, project.problem, project.outcome],
+        subtitle: project.summary,
+        description: [project.problem, ...project.contribution, project.outcome],
       },
-      ...project.links.map((link, linkIndex): FinderItem => ({
-        id: 2 + linkIndex,
-        name: link.href.replace(/^https?:\/\//, ""),
+      ...project.links.map((link) => ({
+        name: link.label,
         icon: "/images/safari.png",
-        kind: "file",
-        fileType: "url",
+        kind: "file" as const,
+        fileType: "url" as const,
         href: link.href,
-        position: "top-10 right-20",
       })),
-      {
-        id: 10,
-        name: `${project.slug}.png`,
-        icon: "/images/image.png",
-        kind: "file",
-        fileType: "img",
-        position: "top-52 right-80",
-        imageUrl: PLACEHOLDER_IMAGE,
-      },
-    ],
-  })),
+      ...[project.cover, ...project.gallery.slice(0, 3)].map((image, imageIndex) => ({
+        name: `${project.slug}-${imageIndex + 1}.png`,
+        // The picture itself is the icon, like a Finder thumbnail.
+        icon: image.src,
+        kind: "file" as const,
+        fileType: "img" as const,
+        imageUrl: image.src,
+        subtitle: image.caption ?? image.alt,
+      })),
+    ];
+
+    return {
+      id: index + 5,
+      name: project.name,
+      icon: "/images/folder.png",
+      kind: "folder",
+      position: FOLDER_POSITIONS[index % FOLDER_POSITIONS.length],
+      children: files.map((file, fileIndex) => ({ ...file, id: fileIndex + 1, position: slot(fileIndex) })),
+    };
+  }),
 };
 
-// TODO: replace placeholder photos with real ones.
+// TODO: add photos of Artur (me.png) when there are some.
 const ABOUT_LOCATION: FinderLocation = {
   id: 2,
   type: "about",
@@ -267,37 +205,13 @@ const ABOUT_LOCATION: FinderLocation = {
   children: [
     {
       id: 1,
-      name: "me.png",
-      icon: "/images/image.png",
-      kind: "file",
-      fileType: "img",
-      position: "top-10 left-5",
-      imageUrl: PLACEHOLDER_IMAGE,
-    },
-    {
-      id: 2,
-      name: "at-work.png",
-      icon: "/images/image.png",
-      kind: "file",
-      fileType: "img",
-      position: "top-28 right-72",
-      imageUrl: PLACEHOLDER_IMAGE,
-    },
-    {
-      id: 4,
       name: "about-me.txt",
       icon: "/images/txt.png",
       kind: "file",
       fileType: "txt",
-      position: "top-60 left-5",
+      position: slot(0),
       subtitle: "The developer behind this desktop",
-      image: PLACEHOLDER_IMAGE,
-      description: [
-        "Hi, I'm Artur, a fullstack developer based in Hannover.",
-        "For the past year and a half I've built commercial products at SOL Webservice & Consulting: admin panels, ordering systems and software that talks to real machines.",
-        "I like the moment where an interface meets hardware: a scanned barcode turning into a poured drink is still my favourite demo.",
-        "Right now I study part-time and I'm open to working student roles and remote contracts.",
-      ],
+      description: profile.about,
     },
   ],
 };
@@ -328,14 +242,24 @@ const TRASH_LOCATION: FinderLocation = {
   icon: "/icons/trash.svg",
   kind: "folder",
   children: [
-    {
-      id: 1,
-      name: "first-landing.png",
-      icon: "/images/image.png",
+    ...archiveProjects.map((project, index): FinderItem => ({
+      id: index + 1,
+      name: `${project.name}.txt`,
+      icon: "/images/txt.png",
       kind: "file",
-      fileType: "img",
-      position: "top-10 left-10",
-      imageUrl: PLACEHOLDER_IMAGE,
+      fileType: "txt",
+      position: slot(index),
+      subtitle: `${project.language}, ${project.year}`,
+      description: [project.description, project.href.replace(/^https?:\/\//, "")],
+    })),
+    {
+      id: archiveProjects.length + 1,
+      name: "github.com",
+      icon: "/images/safari.png",
+      kind: "file",
+      fileType: "url",
+      href: profile.github,
+      position: slot(archiveProjects.length),
     },
   ],
 };

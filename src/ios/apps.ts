@@ -39,7 +39,7 @@ export const homeApps: Record<AppId, HomeApp> = {
   contact: { kind: 'app', id: 'contact', name: 'Contact', Art: ContactsArt },
   resume: { kind: 'app', id: 'resume', name: 'Resume', Art: ResumeArt },
   skills: { kind: 'app', id: 'skills', name: 'Skills', Art: TerminalArt },
-  articles: { kind: 'app', id: 'articles', name: 'Articles', Art: SafariArt },
+  articles: { kind: 'app', id: 'articles', name: 'Live', Art: SafariArt },
   archive: { kind: 'app', id: 'archive', name: 'Archive', Art: ArchiveArt },
 }
 

@@ -1,7 +1,7 @@
 import { Briefcase, Code, FileDown, Mail } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { availability } from '../../data/desktop'
-import { profile } from '../../data/profile'
+import { languages, profile } from '../../data/profile'
 import { Group, Row } from '../components/Screen'
 
 const initials = profile.name
@@ -66,7 +66,9 @@ const ContactApp = () => (
       </Row>
       <Row className="flex-col items-start gap-0.5">
         <span className="text-[13px] leading-4 text-[var(--ios-label-2)]">languages</span>
-        <span className="text-[17px] leading-[22px]">{availability.languages.join(', ')}</span>
+        <span className="text-[17px] leading-[22px]">
+          {languages.map((language) => `${language.name} ${language.level}`).join(', ')}
+        </span>
       </Row>
     </Group>
   </div>
