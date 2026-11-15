@@ -6,8 +6,12 @@ export const profile = {
   headline: "Fullstack developer",
   location: "Hannover, Germany",
   email: "arturedigarov07@gmail.com",
-  cvUrl: "/files/resume.pdf",
-  cvFileName: "Artur_Yediharov_CV.pdf",
+  // The public resume: no street address, phone number or birth date.
+  // The source is in resume/resume-en.html. Do not point this at public/files/resume.pdf.
+  cvUrl: "/files/Artur_Yediharov_Resume.pdf",
+  cvFileName: "Artur_Yediharov_Resume.pdf",
+  // A picture of the first page, for places that cannot render the PDF.
+  cvPreview: "/images/resume-preview.webp",
   github: "https://github.com/ArturEdigarov",
   linkedin: "https://www.linkedin.com/in/artur-yediharov-0b2524372/",
   portrait: {

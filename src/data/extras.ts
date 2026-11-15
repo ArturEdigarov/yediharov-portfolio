@@ -62,10 +62,9 @@ export const archiveProjects: ArchiveProject[] = [
   {
     id: 1,
     name: "Kohlhoff Projekte",
-    meta: "Company website, WordPress and Elementor",
-    // FACT? Confirm what you built: the whole site, the design, or the WordPress setup.
+    meta: "Company website, WordPress and Elementor, 2026",
     description:
-      "Website for Kohlhoff Projekte, a real estate company that finds, secures and develops sites and properties for commercial and industrial users in Germany and Europe. I built it.",
+      "Website for Kohlhoff Projekte, a real estate company that finds, secures and develops sites and properties for commercial and industrial users in Germany and Europe. Built entirely by me, in 2026.",
     href: "https://kohlhoffprojekte.de/",
     image: "/projects/kohlhoff/home.webp",
   },
