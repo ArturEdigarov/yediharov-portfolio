@@ -15,7 +15,7 @@ const PhotoViewer = ({ src, title, onClose }: { src: string; title: string; onCl
       <button type="button" aria-label="Close photo" onClick={onClose} className="absolute inset-0 grid place-items-center">
         <img src={src} alt={title} draggable={false} className="max-h-[78%] w-full object-contain" />
       </button>
-      <p className="pointer-events-none absolute inset-x-0 top-[52px] text-center text-[15px] font-semibold">{title}</p>
+      <p className="pointer-events-none absolute inset-x-0 top-[52px] truncate px-20 text-center text-[15px] font-semibold">{title}</p>
       <button
         type="button"
         onClick={onClose}

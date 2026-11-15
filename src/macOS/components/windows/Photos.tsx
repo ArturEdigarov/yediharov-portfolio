@@ -32,14 +32,14 @@ const Photos = () => {
 
                 <div className="gallery">
                     <ul>
-                        {gallery.map(({ id, img }) => (
+                        {gallery.map(({ id, img, name, alt }) => (
                             <li key={id}>
                                 <button
                                     type="button"
                                     onClick={() =>
                                         openWindow('imgfile', {
                                             id,
-                                            name: `Photo ${id}.png`,
+                                            name,
                                             icon: '/images/image.png',
                                             kind: 'file',
                                             fileType: 'img',
@@ -48,7 +48,7 @@ const Photos = () => {
                                     }
                                     className="size-full cursor-pointer"
                                 >
-                                    <img src={img} alt={`Gallery photo ${id}`} />
+                                    <img src={img} alt={alt} loading="lazy" />
                                 </button>
                             </li>
                         ))}

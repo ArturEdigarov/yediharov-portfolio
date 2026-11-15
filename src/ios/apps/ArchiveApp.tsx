@@ -1,41 +1,33 @@
-import { AnimatePresence } from 'framer-motion'
-import { Image as ImageIcon } from 'lucide-react'
-import { useState } from 'react'
-import { locations } from '../../macOS/constants'
-import type { FinderItem } from '../../macOS/types'
-import PhotoViewer from '../components/PhotoViewer'
+import { ChevronRight, Folder } from 'lucide-react'
+import { archiveProjects } from '../../data/extras'
 import { Group, Row, Screen } from '../components/Screen'
 
-// Archive: old files, listed like the Files app.
-const ArchiveApp = () => {
-  const [opened, setOpened] = useState<FinderItem | null>(null)
-  const files = locations.trash.children
-
-  return (
-    <>
-      <Screen title="Archive">
-        <Group>
-          {files.map((file) => (
-            <Row key={file.id} onPress={file.imageUrl ? () => setOpened(file) : undefined}>
-              <span className="grid size-8 shrink-0 place-items-center rounded-[7px] bg-[var(--ios-fill)] text-[var(--ios-tint)]">
-                <ImageIcon aria-hidden className="size-[18px]" strokeWidth={2} />
-              </span>
-              <span className="truncate">{file.name}</span>
-            </Row>
-          ))}
-        </Group>
-        <p className="px-9 pt-3 text-[13px] leading-[18px] text-[var(--ios-label-2)]">
-          {files.length} {files.length === 1 ? 'item' : 'items'}
-        </p>
-      </Screen>
-
-      <AnimatePresence>
-        {opened?.imageUrl && (
-          <PhotoViewer key={opened.id} src={opened.imageUrl} title={opened.name} onClose={() => setOpened(null)} />
-        )}
-      </AnimatePresence>
-    </>
-  )
-}
+// Archive: earlier projects, listed like the Files app. A tap opens the repository.
+const ArchiveApp = () => (
+  <Screen title="Archive">
+    <Group>
+      {archiveProjects.map((project) => (
+        <Row key={project.id} href={project.href} className="items-start py-3">
+          <span className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-[9px] bg-[var(--ios-fill)] text-[var(--ios-tint)]">
+            <Folder aria-hidden className="size-5" fill="currentColor" strokeWidth={1.5} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate">{project.name}</span>
+            <span className="mt-0.5 line-clamp-2 block text-[14px] leading-[19px] text-[var(--ios-label-2)]">
+              {project.description}
+            </span>
+            <span className="mt-1 block text-[13px] text-[var(--ios-label-3)]">
+              {project.language}, {project.year}
+            </span>
+          </span>
+          <ChevronRight aria-hidden className="mt-1 size-[18px] shrink-0 text-[var(--ios-label-3)]" strokeWidth={2.6} />
+        </Row>
+      ))}
+    </Group>
+    <p className="px-9 pt-3 text-[13px] leading-[18px] text-[var(--ios-label-2)]">
+      Earlier projects, from before my commercial work.
+    </p>
+  </Screen>
+)
 
 export default ArchiveApp

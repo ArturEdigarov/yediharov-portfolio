@@ -124,25 +124,44 @@ const ProjectRow = ({ project }: { project: Project }) => {
         type="button"
         onClick={() => openProject(project.slug)}
         aria-haspopup="dialog"
-        className="group -mx-3 grid w-[calc(100%+1.5rem)] cursor-pointer grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1.5 rounded-xl px-3 py-5 text-left transition-colors max-md:py-3.5 hover:bg-ink/5 focus-visible:bg-ink/5"
+        className="group -mx-3 grid w-[calc(100%+1.5rem)] cursor-pointer grid-cols-[6.75rem_1fr] gap-x-4 rounded-xl px-3 py-4 text-left transition-colors max-md:grid-cols-[4.75rem_1fr] max-md:gap-x-3 max-md:py-3 hover:bg-ink/5 focus-visible:bg-ink/5"
       >
-        <span className="text-[1.75rem] leading-tight font-bold tracking-[-0.02em] text-ink decoration-accent-text decoration-2 underline-offset-[6px] group-hover:underline">
-          {project.name}
+        {/* The cover, so a recruiter sees the product before reading about it. */}
+        <span
+          className="relative mt-1 block aspect-[16/10] self-start overflow-hidden rounded-lg ring-1 ring-line"
+          style={{ backgroundColor: project.tint }}
+        >
+          <img
+            src={project.cover.src}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
         </span>
-        <span className="text-sm text-ink-soft tabular-nums">{project.year}</span>
 
-        <span className="col-span-2 max-w-[48ch] text-base leading-relaxed text-ink-soft">
-          {project.summary}
-        </span>
-
-        <span className="col-span-2 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-          <span className="text-ink">
-            {project.kind === 'Commercial' ? `Client work, ${project.client}` : 'Personal project'}
+        <span className="min-w-0">
+          <span className="flex items-baseline justify-between gap-3">
+            <span className="text-[1.5rem] leading-tight font-bold tracking-[-0.02em] text-ink decoration-accent-text decoration-2 underline-offset-[6px] group-hover:underline max-md:text-[1.25rem]">
+              {project.name}
+            </span>
+            <span className="text-sm text-ink-soft tabular-nums">{project.year}</span>
           </span>
-          <span className="text-ink-soft">{project.stack.slice(0, 3).join(', ')}</span>
-          <span className="ml-auto flex items-center gap-1 font-semibold text-accent-text opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 max-md:opacity-100">
-            Read case study
-            <ArrowUpRight aria-hidden className="h-4 w-4" />
+
+          <span className="mt-1 line-clamp-2 block text-[0.9375rem] leading-snug text-ink-soft max-md:line-clamp-2 max-md:text-sm">
+            {project.summary}
+          </span>
+
+          <span className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[0.8125rem]">
+            <span className="text-ink">
+              {project.kind === 'Commercial' ? 'Client work' : 'Personal project'}
+            </span>
+            <span className="text-ink-soft max-md:hidden">{project.stack.slice(0, 3).join(', ')}</span>
+            <span className="ml-auto flex items-center gap-1 font-semibold text-accent-text opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 max-md:hidden">
+              Case study
+              <ArrowUpRight aria-hidden className="h-4 w-4" />
+            </span>
           </span>
         </span>
       </button>
@@ -155,7 +174,7 @@ const Work = () => (
     <h2 id="work-title" className="text-[2.25rem] leading-tight font-bold tracking-tight text-ink">
       Selected work
     </h2>
-    <p className="mt-2 text-base text-ink-soft max-md:hidden">Two products for clients and one I built to learn.</p>
+    <p className="mt-2 text-base text-ink-soft max-md:hidden">Two commercial products and one of my own.</p>
     <ul className="mt-8 max-md:mt-4">
       {projects.map((project) => (
         <ProjectRow key={project.slug} project={project} />
@@ -170,20 +189,25 @@ const Experience = () => (
       Experience
     </h2>
 
-    <ol className="mt-8 space-y-6 max-md:mt-5 max-md:space-y-4">
+    {/* On short screens the extra detail lines drop out, so the chapter always fits. */}
+    <ol className="mt-6 space-y-4 max-md:mt-4 max-md:space-y-3 [@media(max-height:820px)]:mt-4 [@media(max-height:820px)]:space-y-3">
       {experience.map((entry) => (
-        <li key={entry.place} className="grid grid-cols-[7.5rem_1fr] gap-x-6 max-sm:grid-cols-1">
+        <li key={`${entry.place}-${entry.period}`} className="grid grid-cols-[9rem_1fr] gap-x-5 max-sm:grid-cols-1">
           <span className="pt-0.5 text-sm text-ink-soft tabular-nums">{entry.period}</span>
           <div>
-            <p className="text-lg leading-snug font-semibold text-ink">{entry.title}</p>
-            <p className="text-base text-ink-soft">{entry.place}</p>
-            <p className="mt-1 text-sm leading-relaxed text-ink-faint max-md:hidden">{entry.detail}</p>
+            <p className="text-[1.0625rem] leading-snug font-semibold text-ink">{entry.title}</p>
+            <p className="text-[0.9375rem] leading-snug text-ink-soft">{entry.place}</p>
+            {entry.detail && (
+              <p className="mt-1 text-sm leading-snug text-ink-faint max-md:hidden [@media(max-height:820px)]:hidden">
+                {entry.detail}
+              </p>
+            )}
           </div>
         </li>
       ))}
     </ol>
 
-    <dl className="mt-10 grid grid-cols-[7.5rem_1fr] gap-x-6 gap-y-2 border-t border-line pt-6 text-sm max-md:mt-5 max-md:pt-4 max-sm:grid-cols-[5.5rem_1fr] max-sm:gap-x-3">
+    <dl className="mt-6 grid grid-cols-[9rem_1fr] gap-x-5 gap-y-1.5 border-t border-line pt-4 text-sm max-md:mt-4 max-md:pt-3 max-sm:grid-cols-[5.5rem_1fr] max-sm:gap-x-3">
       {stack.map(({ area, tools }) => (
         <div key={area} className="contents">
           <dt className="text-ink-soft">{area}</dt>

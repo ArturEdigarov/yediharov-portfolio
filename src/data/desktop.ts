@@ -11,23 +11,24 @@ export interface DesktopPhoto {
   hidden?: boolean;
 }
 
+// TODO: add a real photo of Artur here when there is one.
 export const desktopPhotos: DesktopPhoto[] = [
   {
     id: "photo-square",
-    src: "/images/placeholder.svg",
-    alt: "Photo placeholder, square",
+    src: "/projects/solmix/machine-photo.webp",
+    alt: "The SOLMIX cocktail machine running at a real event",
     className: "left-[18.5rem] top-16 size-52",
   },
   {
     id: "photo-wide",
-    src: "/images/placeholder.svg",
-    alt: "Photo placeholder, wide",
+    src: "/projects/fewobooking/mockup-04-verfuegbarkeit.webp",
+    alt: "FeWoBooking availability calendar",
     className: "left-6 top-[18.75rem] h-36 w-60",
   },
   {
     id: "photo-tall",
-    src: "/images/placeholder.svg",
-    alt: "Photo placeholder, tall",
+    src: "/projects/garov-social/02-home-feed-mobile.webp",
+    alt: "Garov Social home feed on a phone",
     className: "bottom-24 right-6 h-56 w-44",
     hidden: true,
   },

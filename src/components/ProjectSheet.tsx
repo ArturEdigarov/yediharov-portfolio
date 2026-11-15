@@ -1,16 +1,43 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
-import { getProject, projects, type Project } from '../data/projects'
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { getProject, projectImages, projects, type Project, type ProjectImage } from '../data/projects'
 import useLandingStore, { projectSlugFromHash } from '../store/landing'
 
-const ScreenshotSlot = ({ label, large = false }: { label: string; large?: boolean }) => (
-  <figure
-    className={`flex items-center justify-center rounded-lg border border-dashed border-ink-soft/40 bg-ink/5 ${
-      large ? 'aspect-[16/10]' : 'aspect-[4/3]'
-    }`}
-  >
-    <figcaption className="px-4 text-center text-sm text-ink-soft">Screenshot: {label}</figcaption>
+// A picture that opens full size. `tint` is what shows while it loads.
+const Picture = ({
+  image,
+  tint,
+  onZoom,
+  className = '',
+  imgClassName = 'w-full',
+  priority = false,
+}: {
+  image: ProjectImage
+  tint: string
+  onZoom: (element: HTMLElement) => void
+  className?: string
+  imgClassName?: string
+  priority?: boolean
+}) => (
+  <figure className={className}>
+    <button
+      type="button"
+      onClick={(event) => onZoom(event.currentTarget)}
+      aria-label={`View full size: ${image.caption ?? image.alt}`}
+      className="group block w-full cursor-zoom-in overflow-hidden rounded-xl ring-1 ring-line"
+      style={{ backgroundColor: tint }}
+    >
+      <img
+        src={image.src}
+        alt={image.alt}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
+        draggable={false}
+        className={`block h-auto transition-transform duration-500 group-hover:scale-[1.02] ${imgClassName}`}
+      />
+    </button>
+    {image.caption && <figcaption className="mt-2 text-sm text-ink-soft">{image.caption}</figcaption>}
   </figure>
 )
 
@@ -21,7 +48,7 @@ const SheetSection = ({ title, children }: { title: string; children: React.Reac
   </section>
 )
 
-const CaseStudy = ({ project }: { project: Project }) => {
+const CaseStudy = ({ project, onZoom }: { project: Project; onZoom: (index: number, element: HTMLElement) => void }) => {
   const openProject = useLandingStore((s) => s.openProject)
   const index = projects.findIndex((p) => p.slug === project.slug)
   const previous = projects[(index - 1 + projects.length) % projects.length]
@@ -52,14 +79,13 @@ const CaseStudy = ({ project }: { project: Project }) => {
         </div>
       </dl>
 
-      <div className="mt-8 space-y-3">
-        <ScreenshotSlot label={project.screenshots[0]} large />
-        <div className="grid grid-cols-2 gap-3">
-          {project.screenshots.slice(1, 3).map((label) => (
-            <ScreenshotSlot key={label} label={label} />
-          ))}
-        </div>
-      </div>
+      <Picture
+        image={project.cover}
+        tint={project.tint}
+        priority
+        className="mt-8"
+        onZoom={(element) => onZoom(0, element)}
+      />
 
       <SheetSection title="The problem">
         <p className="max-w-[60ch]">{project.problem}</p>
@@ -91,6 +117,36 @@ const CaseStudy = ({ project }: { project: Project }) => {
         </dl>
       </SheetSection>
 
+      <SheetSection title="Screens">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-5 max-sm:grid-cols-1">
+          {project.gallery.map((image, index) => (
+            <Picture
+              key={image.src}
+              image={image}
+              tint={project.tint}
+              onZoom={(element) => onZoom(1 + index, element)}
+            />
+          ))}
+        </div>
+      </SheetSection>
+
+      {project.mobile.length > 0 && (
+        <SheetSection title="On the phone">
+          <div className="no-scrollbar -mx-10 flex snap-x gap-3 overflow-x-auto px-10 pb-2 max-sm:-mx-5 max-sm:px-5">
+            {project.mobile.map((image, index) => (
+              <Picture
+                key={image.src}
+                image={image}
+                tint={project.tint}
+                imgClassName="h-80 w-auto max-w-none"
+                className="shrink-0 snap-start"
+                onZoom={(element) => onZoom(1 + project.gallery.length + index, element)}
+              />
+            ))}
+          </div>
+        </SheetSection>
+      )}
+
       <div className="mt-10 flex flex-wrap gap-3">
         {project.links.length > 0 ? (
           project.links.map((link) => (
@@ -106,7 +162,7 @@ const CaseStudy = ({ project }: { project: Project }) => {
           ))
         ) : (
           <p className="text-sm text-ink-soft">
-            The code and screens are under NDA. I'm happy to walk you through them on a call.
+            This is a private client project, so the code is not public. I'm happy to walk you through it on a call.
           </p>
         )}
       </div>
@@ -125,6 +181,93 @@ const CaseStudy = ({ project }: { project: Project }) => {
   )
 }
 
+// Full-size viewer over the case study. Arrow keys move between pictures, Esc closes only the viewer.
+const Lightbox = ({
+  images,
+  index,
+  onIndex,
+  onClose,
+  tint,
+}: {
+  images: ProjectImage[]
+  index: number
+  onIndex: (index: number) => void
+  onClose: () => void
+  tint: string
+}) => {
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const image = images[index]
+
+  useEffect(() => {
+    closeRef.current?.focus({ preventScroll: true })
+  }, [])
+
+  const go = (step: number) => onIndex((index + step + images.length) % images.length)
+
+  return (
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Picture viewer"
+      data-lightbox
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="absolute inset-0 z-10 flex flex-col bg-stage/95"
+    >
+      <div className="flex items-center justify-between gap-4 px-5 py-4">
+        <p className="min-w-0 truncate text-sm text-ink-soft">
+          <span className="tabular-nums">
+            {index + 1} / {images.length}
+          </span>
+          {image.caption ? `, ${image.caption}` : ''}
+        </p>
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={onClose}
+          className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 text-sm text-ink-soft ring-1 ring-line transition-colors ring-inset hover:text-ink"
+        >
+          <X className="h-4 w-4" aria-hidden />
+          Close
+        </button>
+      </div>
+
+      <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-6">
+        <img
+          key={image.src}
+          src={image.src}
+          alt={image.alt}
+          draggable={false}
+          className="max-h-full max-w-full rounded-lg object-contain shadow-2xl"
+          style={{ backgroundColor: tint }}
+        />
+        {images.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Previous picture"
+              onClick={() => go(-1)}
+              className="absolute left-3 grid size-11 cursor-pointer place-items-center rounded-full bg-sheet/80 text-ink ring-1 ring-line backdrop-blur transition-colors hover:bg-sheet"
+            >
+              <ChevronLeft aria-hidden className="size-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next picture"
+              onClick={() => go(1)}
+              className="absolute right-3 grid size-11 cursor-pointer place-items-center rounded-full bg-sheet/80 text-ink ring-1 ring-line backdrop-blur transition-colors hover:bg-sheet"
+            >
+              <ChevronRight aria-hidden className="size-5" />
+            </button>
+          </>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
 const ProjectSheet = () => {
   const slug = useLandingStore((s) => s.openProjectSlug)
   const openProject = useLandingStore((s) => s.openProject)
@@ -135,6 +278,22 @@ const ProjectSheet = () => {
   const panelRef = useRef<HTMLDivElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
+
+  // Which picture is open full size, and what to focus again when it closes.
+  const [zoom, setZoom] = useState<{ slug: string; index: number } | null>(null)
+  const zoomReturnRef = useRef<HTMLElement | null>(null)
+  const images = project ? projectImages(project) : []
+  const zoomIndex = project && zoom?.slug === project.slug ? zoom.index : null
+
+  const openZoom = (index: number, element: HTMLElement) => {
+    if (!project) return
+    zoomReturnRef.current = element
+    setZoom({ slug: project.slug, index })
+  }
+  const closeZoom = () => {
+    setZoom(null)
+    zoomReturnRef.current?.focus({ preventScroll: true })
+  }
 
   // Deep link: /#work/solmix opens that case study on load.
   useEffect(() => {
@@ -159,10 +318,28 @@ const ProjectSheet = () => {
   useEffect(() => {
     if (!project) return
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeProject()
-      // Keep Tab inside the dialog.
-      if (e.key === 'Tab' && panelRef.current) {
-        const focusable = panelRef.current.querySelectorAll<HTMLElement>('a[href], button')
+      const viewerOpen = zoomIndex !== null
+
+      if (e.key === 'Escape') {
+        // One layer at a time: the picture viewer first, then the case study.
+        if (viewerOpen) closeZoom()
+        else closeProject()
+        return
+      }
+
+      if (viewerOpen && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        const step = e.key === 'ArrowRight' ? 1 : -1
+        setZoom({ slug: project.slug, index: (zoomIndex + step + images.length) % images.length })
+        return
+      }
+
+      // Keep Tab inside whichever layer is on top.
+      if (e.key === 'Tab') {
+        const scope = viewerOpen
+          ? panelRef.current?.parentElement?.querySelector<HTMLElement>('[data-lightbox]')
+          : panelRef.current
+        if (!scope) return
+        const focusable = scope.querySelectorAll<HTMLElement>('a[href], button')
         const first = focusable[0]
         const last = focusable[focusable.length - 1]
         if (e.shiftKey && document.activeElement === first) {
@@ -176,7 +353,7 @@ const ProjectSheet = () => {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [project, closeProject])
+  }, [project, closeProject, zoomIndex, images.length])
 
   const slide = reduceMotion
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
@@ -215,8 +392,21 @@ const ProjectSheet = () => {
                 Close
               </button>
             </div>
-            <CaseStudy key={project.slug} project={project} />
+            <CaseStudy key={project.slug} project={project} onZoom={openZoom} />
           </motion.div>
+
+          <AnimatePresence>
+            {zoomIndex !== null && (
+              <Lightbox
+                key="lightbox"
+                images={images}
+                index={zoomIndex}
+                tint={project.tint}
+                onIndex={(index) => setZoom({ slug: project.slug, index })}
+                onClose={closeZoom}
+              />
+            )}
+          </AnimatePresence>
         </div>
       )}
     </AnimatePresence>

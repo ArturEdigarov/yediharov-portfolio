@@ -1,33 +1,43 @@
 import { AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
-import { gallery } from '../../macOS/constants'
+import { libraryPhotos } from '../../data/extras'
 import PhotoViewer from '../components/PhotoViewer'
 import { Screen } from '../components/Screen'
 
-// Library: a three-column grid with hairline gaps, like Photos.
+// Library: a three-column grid with hairline gaps, like Photos. Every picture from the case studies.
 const GalleryApp = () => {
-  const [openId, setOpenId] = useState<number | null>(null)
-  const opened = gallery.find((photo) => photo.id === openId)
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const opened = openIndex === null ? undefined : libraryPhotos[openIndex]
 
   return (
     <>
       <Screen title="Library">
         <ul className="grid grid-cols-3 gap-[2px]">
-          {gallery.map((photo) => (
-            <li key={photo.id}>
-              <button type="button" onClick={() => setOpenId(photo.id)} aria-label={`Open photo ${photo.id}`} className="block aspect-square w-full overflow-hidden active:opacity-70">
-                <img src={photo.img} alt="" draggable={false} className="size-full object-cover" />
+          {libraryPhotos.map((photo, index) => (
+            <li key={photo.src}>
+              <button
+                type="button"
+                onClick={() => setOpenIndex(index)}
+                aria-label={`Open ${photo.caption ?? photo.alt}`}
+                className="block aspect-square w-full overflow-hidden bg-[var(--ios-fill)] active:opacity-70"
+              >
+                <img src={photo.src} alt="" loading="lazy" decoding="async" draggable={false} className="size-full object-cover" />
               </button>
             </li>
           ))}
         </ul>
-        <p className="pt-6 text-center text-[15px] text-[var(--ios-label-2)]">
-          {gallery.length} Photos
-        </p>
+        <p className="pt-6 text-center text-[15px] text-[var(--ios-label-2)]">{libraryPhotos.length} Photos</p>
       </Screen>
 
       <AnimatePresence>
-        {opened && <PhotoViewer key={opened.id} src={opened.img} title={`Photo ${opened.id}`} onClose={() => setOpenId(null)} />}
+        {opened && (
+          <PhotoViewer
+            key={opened.src}
+            src={opened.src}
+            title={opened.caption ?? opened.project}
+            onClose={() => setOpenIndex(null)}
+          />
+        )}
       </AnimatePresence>
     </>
   )

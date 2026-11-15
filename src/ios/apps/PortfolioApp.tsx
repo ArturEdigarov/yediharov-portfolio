@@ -1,12 +1,21 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { ChevronRight, ExternalLink, Folder } from 'lucide-react'
+import { ChevronRight, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
-import { projects, type Project } from '../../data/projects'
+import { projectImages, projects, type Project } from '../../data/projects'
+import PhotoViewer from '../components/PhotoViewer'
 import { Group, PushScreen, Row, Screen } from '../components/Screen'
 
 const IOS_EASE = [0.32, 0.72, 0, 1] as const
 
-const ProjectDetail = ({ project, onBack }: { project: Project; onBack: () => void }) => (
+const ProjectDetail = ({
+  project,
+  onBack,
+  onOpenImage,
+}: {
+  project: Project
+  onBack: () => void
+  onOpenImage: (index: number) => void
+}) => (
   <Screen title={project.name} backLabel="Work" onBack={onBack}>
     <p className="px-5 pb-5 text-[17px] leading-[23px] text-[var(--ios-label-2)]">{project.summary}</p>
 
@@ -31,15 +40,26 @@ const ProjectDetail = ({ project, onBack }: { project: Project; onBack: () => vo
       </Row>
     </Group>
 
-    {/* Screenshots scroll sideways and snap, like a Photos strip. */}
+    {/* Pictures scroll sideways and snap, like a Photos strip. A tap opens one full screen. */}
     <div className="no-scrollbar mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4">
-      {project.screenshots.map((label) => (
-        <figure
-          key={label}
-          className="grid aspect-[4/3] w-[82%] shrink-0 snap-center place-items-center rounded-[14px] border border-dashed border-[var(--ios-label-3)] bg-[var(--ios-cell)]"
+      {projectImages(project).map((image, index) => (
+        <button
+          key={image.src}
+          type="button"
+          onClick={() => onOpenImage(index)}
+          aria-label={`Open ${image.caption ?? image.alt}`}
+          className="shrink-0 snap-center overflow-hidden rounded-[14px] bg-[var(--ios-cell)] active:opacity-70"
+          style={{ backgroundColor: project.tint }}
         >
-          <figcaption className="px-4 text-center text-[14px] text-[var(--ios-label-2)]">Screenshot: {label}</figcaption>
-        </figure>
+          <img
+            src={image.src}
+            alt={image.alt}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+            draggable={false}
+            className="block h-[190px] w-auto max-w-none"
+          />
+        </button>
       ))}
     </div>
 
@@ -83,7 +103,7 @@ const ProjectDetail = ({ project, onBack }: { project: Project; onBack: () => vo
         ))
       ) : (
         <p className="px-1 text-[15px] leading-[21px] text-[var(--ios-label-2)]">
-          The code and screens are under NDA. I'm happy to walk you through them on a call.
+          This is a private client project, so the code is not public. I'm happy to walk you through it on a call.
         </p>
       )}
     </div>
@@ -93,6 +113,9 @@ const ProjectDetail = ({ project, onBack }: { project: Project; onBack: () => vo
 // Work: the project list. A tap pushes the full case study over it.
 const PortfolioApp = () => {
   const [selected, setSelected] = useState<Project | null>(null)
+  const [openImage, setOpenImage] = useState<number | null>(null)
+  const images = selected ? projectImages(selected) : []
+  const viewed = openImage === null ? undefined : images[openImage]
   const reduceMotion = useReducedMotion()
 
   return (
@@ -106,8 +129,11 @@ const PortfolioApp = () => {
           <Group>
             {projects.map((project) => (
               <Row key={project.slug} onPress={() => setSelected(project)} className="items-start py-3">
-                <span className="mt-0.5 grid size-10 shrink-0 place-items-center rounded-[9px] bg-gradient-to-b from-[#4db3ff] to-[#1b7cff] text-white">
-                  <Folder aria-hidden className="size-5" fill="currentColor" strokeWidth={1.5} />
+                <span
+                  className="mt-0.5 block aspect-[16/10] w-[68px] shrink-0 overflow-hidden rounded-[9px] ring-1 ring-black/10"
+                  style={{ backgroundColor: project.tint }}
+                >
+                  <img src={project.cover.src} alt="" loading="lazy" decoding="async" draggable={false} className="size-full object-cover" />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate">{project.name}</span>
@@ -123,7 +149,7 @@ const PortfolioApp = () => {
             ))}
           </Group>
           <p className="px-9 pt-3 text-[13px] leading-[18px] text-[var(--ios-label-2)]">
-            Two client products and one personal project.
+            Two commercial products and one of my own.
           </p>
         </Screen>
       </motion.div>
@@ -131,8 +157,19 @@ const PortfolioApp = () => {
       <AnimatePresence>
         {selected && (
           <PushScreen key={selected.slug} onBack={() => setSelected(null)}>
-            <ProjectDetail project={selected} onBack={() => setSelected(null)} />
+            <ProjectDetail project={selected} onBack={() => setSelected(null)} onOpenImage={setOpenImage} />
           </PushScreen>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {viewed && (
+          <PhotoViewer
+            key={viewed.src}
+            src={viewed.src}
+            title={viewed.caption ?? viewed.alt}
+            onClose={() => setOpenImage(null)}
+          />
         )}
       </AnimatePresence>
     </>

@@ -37,3 +37,7 @@ CLAUDE.md
 # Draft files
 /26v*.jsx
 /src/App-04.07
+
+# Original project screenshots, mockups and videos (156 MB). Only the optimized copies in
+# public/projects are shipped. Raw phone photos also carry location metadata.
+/public/portfolio/
