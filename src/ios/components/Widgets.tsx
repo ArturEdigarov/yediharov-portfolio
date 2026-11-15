@@ -51,7 +51,7 @@ export const AvailabilityWidget = ({ onPress }: { onPress: (el: HTMLElement) => 
 
 // Small square widget: the first visible photo from the desktop data.
 export const PhotoWidget = ({ onPress }: { onPress: (el: HTMLElement) => void }) => {
-  const photo = desktopPhotos.find((item) => !item.hidden) ?? desktopPhotos[0]
+  const photo = desktopPhotos.find((item) => item.onPhone) ?? desktopPhotos[0]
 
   return (
     <button
